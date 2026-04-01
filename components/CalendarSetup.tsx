@@ -91,7 +91,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
       >
         <h2
           style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
             fontStyle: "italic",
             fontWeight: 400,
             fontSize: "20px",
@@ -104,7 +104,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
         </h2>
         <p
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 300,
             fontSize: "13px",
             color: "#6B6560",
@@ -156,7 +156,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
                     border: "1px solid #D4CEC8",
                     borderRadius: "6px",
                     fontSize: "13px",
-                    fontFamily: "'DM Sans', sans-serif",
+                    fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                     color: "#1A1714",
                     background: "#FAFAF9",
                     outline: "none",
@@ -180,7 +180,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
                     border: `1px solid ${index === 0 && error ? "#B85450" : "#D4CEC8"}`,
                     borderRadius: "6px",
                     fontSize: "13px",
-                    fontFamily: "'DM Sans', sans-serif",
+                    fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                     color: "#1A1714",
                     background: "#FAFAF9",
                     outline: "none",
@@ -229,7 +229,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
           {error && (
             <div
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                 fontSize: "12px",
                 color: "#B85450",
                 marginBottom: "10px",
@@ -249,7 +249,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
                 border: "none",
                 color: "#C8A882",
                 fontSize: "13px",
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                 fontWeight: 400,
                 cursor: "pointer",
                 padding: "0",
@@ -273,7 +273,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
               border: "none",
               borderRadius: "6px",
               fontSize: "14px",
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
               fontWeight: 500,
               cursor: "pointer",
               display: "flex",
@@ -305,7 +305,7 @@ export default function CalendarSetup({ isUpdate = false, onDismiss }: CalendarS
                 border: "none",
                 borderRadius: "6px",
                 fontSize: "13px",
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                 fontWeight: 400,
                 cursor: "pointer",
                 marginTop: "8px",

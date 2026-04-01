@@ -1,31 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
-
 @import "tailwindcss";
 
 :root {
-  --bg: #FAFAF9;
-  --surface: #FFFFFF;
-  --surface-secondary: #F5F2EE;
-  --border: #E8E4DF;
-  --border-strong: #D4CEC8;
-  --accent: #C8A882;
-  --accent-dark: #8C6E50;
-  --text-primary: #1A1714;
-  --text-secondary: #6B6560;
-  --text-tertiary: #A39E99;
-  --success: #4A7C59;
-  --danger: #B85450;
+  --color-bg:           #FAFAF9;
+  --color-surface:      #FFFFFF;
+  --color-surface-2:    #F5F2EE;
+  --color-header:       #1A1714;
+  --color-header-2:     #2C2825;
+  --color-text-primary: #1A1714;
+  --color-text-mid:     #6B6560;
+  --color-text-muted:   #A39E99;
+  --color-text-header:  #FAFAF9;
+  --color-accent:       #C8A882;
+  --color-accent-dark:  #8C6E50;
+  --color-border:       #E8E4DF;
+  --color-border-mid:   #D4CEC8;
+  --color-success:      #4A7C59;
+  --color-danger:       #B85450;
+
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-dm: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 }
 
 * {
   box-sizing: border-box;
 }
 
-html,
-body {
-  background: var(--bg);
-  color: var(--text-primary);
-  font-family: 'DM Sans', sans-serif;
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-dm);
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -34,39 +38,35 @@ body {
 /* Card slide-up entrance */
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 .card-reveal {
   animation: slideUp 300ms ease-out forwards;
 }
 
-/* Info field cell stagger */
+/* Info field stagger */
 @keyframes fieldFadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
-
 .field-cell {
   animation: fieldFadeIn 200ms ease forwards;
 }
 
-/* Session item slide in from right */
+/* Session item slide in */
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(8px); }
-  to { opacity: 1; transform: translateX(0); }
+  to   { opacity: 1; transform: translateX(0); }
 }
-
 .session-new {
   animation: slideInRight 250ms ease forwards;
 }
 
-/* Progress bar fill */
+/* Progress bar */
 @keyframes progressFill {
   from { width: 0%; }
-  to { width: 100%; }
+  to   { width: 100%; }
 }
-
 .progress-fill {
   animation: progressFill 3s ease-in-out forwards;
 }
@@ -74,26 +74,18 @@ body {
 /* Modal entrance */
 @keyframes modalIn {
   from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+  to   { opacity: 1; transform: scale(1); }
 }
-
 .modal-card {
   animation: modalIn 200ms ease-out forwards;
 }
 
-/* Action button active state */
+/* Button active press */
 .action-btn:active {
   transform: scale(0.98);
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 2px;
-}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border-mid); border-radius: 2px; }

@@ -16,7 +16,7 @@ function Field({ label, value, index, children }: { label: string; value?: strin
     >
       <div
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
           fontWeight: 500,
           fontSize: "10px",
           color: "#A39E99",
@@ -30,7 +30,7 @@ function Field({ label, value, index, children }: { label: string; value?: strin
       {children || (
         <div
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
             fontSize: "12px",
             color: "#1A1714",
           }}
@@ -58,7 +58,7 @@ function ActionBtn({ href, children, primary }: { href: string; children: React.
         padding: "0 16px",
         borderRadius: "6px",
         fontSize: "13px",
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
         fontWeight: 500,
         cursor: "pointer",
         textDecoration: "none",
@@ -96,7 +96,7 @@ export default function MovieCard({ data }: { data: MovieData }) {
             borderRadius: "6px",
             padding: "14px",
             marginBottom: "20px",
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 300,
             fontSize: "13px",
             color: "#6B6560",
@@ -127,7 +127,7 @@ export default function MovieCard({ data }: { data: MovieData }) {
                 background: "#C8A882",
                 color: "#FFFFFF",
                 fontSize: "10px",
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                 fontWeight: 500,
                 padding: "2px 8px",
                 borderRadius: "3px",
@@ -137,7 +137,7 @@ export default function MovieCard({ data }: { data: MovieData }) {
               {data.platform}
             </span>
           ) : (
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#1A1714" }}>—</span>
+            <span style={{ fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)", fontSize: "12px", color: "#1A1714" }}>—</span>
           )}
         </Field>
       </div>

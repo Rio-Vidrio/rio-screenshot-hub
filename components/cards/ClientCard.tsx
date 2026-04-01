@@ -22,7 +22,7 @@ function Field({ label, value, index }: { label: string; value: string; index: n
     >
       <div
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
           fontWeight: 500,
           fontSize: "10px",
           color: "#A39E99",
@@ -35,7 +35,7 @@ function Field({ label, value, index }: { label: string; value: string; index: n
       </div>
       <div
         style={{
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
           fontSize: "12px",
           color: "#1A1714",
         }}
@@ -70,7 +70,7 @@ function ActionBtn({
         padding: "0 16px",
         borderRadius: "6px",
         fontSize: "13px",
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
         fontWeight: 500,
         cursor: "pointer",
         textDecoration: "none",
@@ -135,7 +135,7 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
             borderRadius: "6px",
             padding: "14px",
             marginBottom: "20px",
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 300,
             fontSize: "13px",
             color: "#6B6560",
@@ -198,7 +198,7 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
         </button>
         <span
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 400,
             fontSize: "12px",
             color: "#6B6560",
@@ -219,7 +219,7 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
       >
         <span
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 300,
             fontSize: "12px",
             color: "#A39E99",
@@ -238,7 +238,7 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
               border: "1px solid #D4CEC8",
               borderRadius: "6px",
               fontSize: "12px",
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
               color: "#1A1714",
               background: "#FAFAF9",
               cursor: "pointer",
@@ -259,7 +259,7 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
               border: "none",
               color: "#C8A882",
               fontSize: "12px",
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
               cursor: "pointer",
               padding: 0,
             }}

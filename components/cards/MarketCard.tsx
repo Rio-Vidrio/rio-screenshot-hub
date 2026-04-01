@@ -16,7 +16,7 @@ function CopyBtn({ text, label, primary }: { text: string; label: string; primar
         padding: "0 16px",
         borderRadius: "6px",
         fontSize: "13px",
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
         fontWeight: 500,
         cursor: "pointer",
         transition: "background 150ms",
@@ -50,7 +50,7 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
             background: "#F5F2EE",
             border: "1px solid #E8E4DF",
             color: "#6B6560",
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 500,
             fontSize: "11px",
             padding: "3px 10px",
@@ -65,7 +65,7 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
       <div style={{ marginBottom: "18px" }}>
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 500,
             fontSize: "10px",
             color: "#A39E99",
@@ -91,7 +91,7 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
                 background: "#F5F2EE",
                 borderRadius: "6px",
                 padding: "10px 12px",
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
                 fontSize: "12px",
                 color: "#1A1714",
                 animationDelay: `${i * 40}ms`,
@@ -107,7 +107,7 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
       <div style={{ marginBottom: "20px" }}>
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 500,
             fontSize: "10px",
             color: "#A39E99",
@@ -123,7 +123,7 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
             background: "#F5F2EE",
             borderRadius: "6px",
             padding: "14px",
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 300,
             fontSize: "13px",
             color: "#1A1714",

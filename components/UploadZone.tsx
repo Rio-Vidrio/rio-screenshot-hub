@@ -44,15 +44,16 @@ export default function UploadZone({ onFile, disabled }: UploadZoneProps) {
       style={{
         width: "100%",
         minHeight: "200px",
-        border: `1px solid ${dragging ? "#C8A882" : "#D4CEC8"}`,
-        borderRadius: "10px",
+        border: `1.5px solid ${dragging ? "#C8A882" : "#D4CEC8"}`,
+        borderRadius: "12px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         cursor: disabled ? "not-allowed" : "pointer",
         transition: "border-color 150ms, background 150ms",
-        padding: "48px 24px",
+        padding: "40px 24px",
+        gap: "10px",
         opacity: disabled ? 0.5 : 1,
         background: dragging ? "#FDF9F5" : "#FFFFFF",
       }}
@@ -65,24 +66,30 @@ export default function UploadZone({ onFile, disabled }: UploadZoneProps) {
         onChange={handleChange}
         disabled={disabled}
       />
+
+      {/* Upload arrow icon */}
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 13V4M10 4L6.5 7.5M10 4L13.5 7.5" stroke="#C8A882" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M3 14v1a3 3 0 003 3h8a3 3 0 003-3v-1" stroke="#C8A882" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+
       <div
         style={{
-          fontFamily: "'Playfair Display', serif",
+          fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
           fontStyle: "italic",
           fontWeight: 400,
-          fontSize: "18px",
+          fontSize: "16px",
           color: "#6B6560",
           textAlign: "center",
-          marginBottom: "10px",
         }}
       >
         Drop a screenshot
       </div>
       <div
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
           fontWeight: 300,
-          fontSize: "13px",
+          fontSize: "12px",
           color: "#A39E99",
           textAlign: "center",
           lineHeight: "1.6",

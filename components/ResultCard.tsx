@@ -50,33 +50,33 @@ export default function ResultCard({ result, onOpenCalendarSetup }: ResultCardPr
         background: "#FFFFFF",
         border: "1px solid #E8E4DF",
         borderLeft: "3px solid #C8A882",
-        borderRadius: "10px",
+        borderRadius: "12px",
         overflow: "hidden",
       }}
     >
       {/* Header */}
       <div
         style={{
-          padding: "22px 28px 18px",
+          padding: "20px 28px 16px",
           borderBottom: "1px solid #F0ECE8",
         }}
       >
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 500,
             fontSize: "10px",
             color: "#C8A882",
             letterSpacing: "0.12em",
             textTransform: "uppercase",
-            marginBottom: "8px",
+            marginBottom: "6px",
           }}
         >
           {typeLabel}
         </div>
         <div
           style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
             fontWeight: 400,
             fontSize: "18px",
             color: "#1A1714",
@@ -88,7 +88,7 @@ export default function ResultCard({ result, onOpenCalendarSetup }: ResultCardPr
       </div>
 
       {/* Body */}
-      <div style={{ padding: "28px" }}>
+      <div style={{ padding: "24px 28px" }}>
         {result.type === "CLIENT_CONVO" && <ClientCard data={result} onOpenCalendarSetup={onOpenCalendarSetup} />}
         {result.type === "RESTAURANT" && <RestaurantCard data={result} />}
         {result.type === "MOVIE" && <MovieCard data={result} />}

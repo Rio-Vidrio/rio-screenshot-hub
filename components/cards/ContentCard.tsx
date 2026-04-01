@@ -15,7 +15,7 @@ function Field({ label, value, index }: { label: string; value: string; index: n
     >
       <div
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
           fontWeight: 500,
           fontSize: "10px",
           color: "#A39E99",
@@ -28,7 +28,7 @@ function Field({ label, value, index }: { label: string; value: string; index: n
       </div>
       <div
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
           fontWeight: 400,
           fontSize: "12px",
           color: "#1A1714",
@@ -54,7 +54,7 @@ function CopyBtn({ text, label, primary }: { text: string; label: string; primar
         padding: "0 16px",
         borderRadius: "6px",
         fontSize: "13px",
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
         fontWeight: 500,
         cursor: "pointer",
         transition: "background 150ms",
@@ -84,7 +84,7 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
           borderLeft: "3px solid #C8A882",
           paddingLeft: "14px",
           marginBottom: "20px",
-          fontFamily: "'Playfair Display', serif",
+          fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
           fontStyle: "italic",
           fontSize: "14px",
           color: "#1A1714",
@@ -111,7 +111,7 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
       <div style={{ marginBottom: "16px" }}>
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 500,
             fontSize: "10px",
             color: "#A39E99",
@@ -127,7 +127,7 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
             background: "#F5F2EE",
             borderRadius: "6px",
             padding: "14px",
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 300,
             fontSize: "13px",
             color: "#1A1714",
@@ -142,7 +142,7 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
       <div style={{ marginBottom: "20px" }}>
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 500,
             fontSize: "10px",
             color: "#A39E99",
@@ -155,7 +155,7 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
         </div>
         <div
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
             fontSize: "12px",
             color: "#6B6560",
             lineHeight: "1.6",

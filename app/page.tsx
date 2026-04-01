@@ -56,6 +56,8 @@ function GearIcon() {
   );
 }
 
+// Gear hover handled inline — stroke color is static since SVG stroke can't transition via CSS easily
+
 export default function Home() {
   const [state, setState] = useState<AppState>({ status: "idle" });
   const [sessions, setSessions] = useState<SessionItem[]>([]);
@@ -188,30 +190,30 @@ export default function Home() {
       {/* Top bar */}
       <header
         style={{
-          borderBottom: "1px solid #E8E4DF",
-          padding: "0 28px",
-          height: "56px",
+          borderBottom: "1px solid #2C2825",
+          padding: "14px 24px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          background: "#FFFFFF",
+          background: "#1A1714",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <svg width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="10" width="52" height="52" rx="10" fill="#1A1714"/>
+            <rect x="10" y="10" width="52" height="52" rx="10" fill="#2C2825"/>
             <rect x="22" y="22" width="28" height="4" rx="2" fill="#C8A882"/>
             <rect x="22" y="32" width="20" height="3" rx="1.5" fill="#C8A882" opacity="0.6"/>
             <rect x="22" y="40" width="24" height="3" rx="1.5" fill="#C8A882" opacity="0.4"/>
             <rect x="44" y="44" width="10" height="10" rx="2" fill="#C8A882"/>
-            <rect x="47" y="47" width="4" height="4" rx="1" fill="#1A1714"/>
+            <rect x="47" y="47" width="4" height="4" rx="1" fill="#2C2825"/>
           </svg>
           <span
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
+              fontStyle: "italic",
               fontWeight: 400,
-              fontSize: "15px",
-              color: "#1A1714",
+              fontSize: "17px",
+              color: "#FAFAF9",
               letterSpacing: "0.01em",
             }}
           >
@@ -233,7 +235,7 @@ export default function Home() {
             transition: "background 150ms",
           }}
           onMouseEnter={(e) =>
-            ((e.currentTarget as HTMLButtonElement).style.background = "#F5F2EE")
+            ((e.currentTarget as HTMLButtonElement).style.background = "#2C2825")
           }
           onMouseLeave={(e) =>
             ((e.currentTarget as HTMLButtonElement).style.background = "transparent")
@@ -251,7 +253,7 @@ export default function Home() {
           gap: "28px",
           maxWidth: "1100px",
           margin: "0 auto",
-          padding: "28px",
+          padding: "32px 24px",
           minHeight: "calc(100vh - 56px)",
           alignItems: "start",
         }}

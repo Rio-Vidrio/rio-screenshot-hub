@@ -43,19 +43,11 @@ interface SessionPanelProps {
   onClear: () => void;
 }
 
-export default function SessionPanel({
-  items,
-  activeId,
-  onSelect,
-  onClear,
-}: SessionPanelProps) {
+export default function SessionPanel({ items, activeId, onSelect, onClear }: SessionPanelProps) {
   return (
     <div
       style={{
-        background: "#FFFFFF",
-        border: "1px solid #E8E4DF",
-        borderRadius: "10px",
-        overflow: "hidden",
+        background: "transparent",
         display: "flex",
         flexDirection: "column",
         height: "100%",
@@ -64,21 +56,22 @@ export default function SessionPanel({
       {/* Header */}
       <div
         style={{
-          padding: "16px 18px",
-          borderBottom: "1px solid #F0ECE8",
+          padding: "0 0 10px 0",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          borderBottom: "1px solid #E8E4DF",
+          marginBottom: "4px",
         }}
       >
         <span
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
             fontWeight: 500,
-            fontSize: "10px",
+            fontSize: "11px",
             color: "#A39E99",
             textTransform: "uppercase",
-            letterSpacing: "0.12em",
+            letterSpacing: "0.08em",
           }}
         >
           History
@@ -90,11 +83,11 @@ export default function SessionPanel({
               background: "transparent",
               border: "none",
               color: "#A39E99",
-              fontSize: "12px",
-              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "11px",
+              fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
+              fontWeight: 400,
               cursor: "pointer",
-              padding: "2px 6px",
-              borderRadius: "3px",
+              padding: "2px 0",
               transition: "color 150ms",
             }}
             onMouseEnter={(e) =>
@@ -114,11 +107,11 @@ export default function SessionPanel({
         {items.length === 0 ? (
           <div
             style={{
-              padding: "28px 18px",
+              padding: "20px 0",
               textAlign: "center",
               color: "#A39E99",
-              fontSize: "13px",
-              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "12px",
+              fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
               fontWeight: 300,
             }}
           >
@@ -133,14 +126,15 @@ export default function SessionPanel({
               style={{
                 display: "block",
                 width: "100%",
-                padding: "13px 18px",
+                padding: "10px 12px",
                 background: activeId === item.id ? "#F5F2EE" : "transparent",
                 border: "none",
-                borderBottom: "1px solid #F5F2EE",
                 borderLeft: activeId === item.id ? "2px solid #C8A882" : "2px solid transparent",
+                borderRadius: "8px",
                 textAlign: "left",
                 cursor: "pointer",
                 transition: "background 200ms",
+                marginBottom: "2px",
               }}
               onMouseEnter={(e) => {
                 if (activeId !== item.id)
@@ -151,7 +145,7 @@ export default function SessionPanel({
                   (e.currentTarget as HTMLButtonElement).style.background = "transparent";
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "9px", marginBottom: "4px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "3px" }}>
                 <span
                   style={{
                     width: "6px",
@@ -163,7 +157,7 @@ export default function SessionPanel({
                 />
                 <span
                   style={{
-                    fontFamily: "'DM Sans', sans-serif",
+                    fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                     fontWeight: 400,
                     fontSize: "13px",
                     color: "#1A1714",
@@ -178,11 +172,11 @@ export default function SessionPanel({
               </div>
               <div
                 style={{
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
                   fontWeight: 300,
                   fontSize: "11px",
                   color: "#A39E99",
-                  paddingLeft: "15px",
+                  paddingLeft: "14px",
                 }}
               >
                 {relativeTime(item.timestamp)}
