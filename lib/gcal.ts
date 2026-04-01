@@ -30,10 +30,11 @@ function toGCalDate(dateStr: string, timeStr: string): string {
   return `${year}${month}${day}T${hour}${minute}00`;
 }
 
-function appendAuthUser(url: string, calendarEmail?: string): string {
-  const email = calendarEmail ?? getDefaultCalendarEmail();
-  if (!email) return url;
-  return `${url}&authuser=${encodeURIComponent(email)}`;
+function appendAuthUser(url: string, _calendarEmail?: string): string {
+  // Always use authuser=0 (current primary Google session).
+  // Passing an email address causes Google to demand sign-in for that account
+  // if it isn't the active session, triggering an unwanted sign-up flow.
+  return `${url}&authuser=0`;
 }
 
 export function buildCalendarEventLink({
