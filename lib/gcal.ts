@@ -107,3 +107,80 @@ export function buildTaskLink({
 }): string {
   return buildReminderLink({ title: `[Task] ${title}`, details, calendarEmail });
 }
+
+// ─── iOS / native calendar helpers ───────────────────────────────────────────
+
+/** True when running on iPhone or iPad. */
+export function isIOS(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+/** Build a raw iCalendar (.ics) string for a timed event. */
+export function buildICSContent({
+  title,
+  date,
+  startTime,
+  endTime,
+  details = "",
+  location = "",
+}: {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  details?: string;
+  location?: string;
+}): string {
+  const start = toGCalDate(date, startTime);
+  const end = toGCalDate(date, endTime);
+  const uid = `${Date.now()}@rio-screenshot-hub`;
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Rio Screenshot Hub//EN",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTART:${start}`,
+    `DTEND:${end}`,
+    `SUMMARY:${title}`,
+  ];
+  if (details) lines.push(`DESCRIPTION:${details.replace(/\n/g, "\\n")}`);
+  if (location) lines.push(`LOCATION:${location}`);
+  lines.push("END:VEVENT", "END:VCALENDAR");
+  return lines.join("\r\n");
+}
+
+/** Build a .ics reminder for today at 8 PM (same shape as buildReminderLink). */
+export function buildReminderICSContent({
+  title,
+  details = "",
+}: {
+  title: string;
+  details?: string;
+}): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return buildICSContent({
+    title,
+    date: `${year}-${month}-${day}`,
+    startTime: "20:00",
+    endTime: "20:30",
+    details,
+  });
+}
+
+/** Trigger a .ics blob download — iOS Safari hands it off to Apple Calendar. */
+export function triggerICSDownload(content: string, filename = "event.ics"): void {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}

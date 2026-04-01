@@ -1,7 +1,14 @@
 "use client";
 
 import { ClientConvoData } from "@/lib/types";
-import { buildCalendarEventLink, getCalendarPrefs, CalendarPrefs } from "@/lib/gcal";
+import {
+  buildCalendarEventLink,
+  getCalendarPrefs,
+  CalendarPrefs,
+  isIOS,
+  buildICSContent,
+  triggerICSDownload,
+} from "@/lib/gcal";
 import { useState, useEffect } from "react";
 
 interface ClientCardProps {
@@ -48,44 +55,48 @@ function Field({ label, value, index }: { label: string; value: string; index: n
 
 function ActionBtn({
   href,
+  onClick,
   children,
   primary,
 }: {
   href?: string;
+  onClick?: () => void;
   children: React.ReactNode;
   primary?: boolean;
 }) {
+  const baseStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    height: "44px",
+    padding: "0 16px",
+    borderRadius: "6px",
+    fontSize: "13px",
+    fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
+    fontWeight: 500,
+    cursor: "pointer",
+    textDecoration: "none",
+    transition: "background 150ms",
+    border: primary ? "none" : "1px solid #D4CEC8",
+    background: primary ? "#1A1714" : "#FFFFFF",
+    color: primary ? "#FFFFFF" : "#1A1714",
+  };
+  const onEnter = (e: React.MouseEvent<HTMLElement>) =>
+    ((e.currentTarget as HTMLElement).style.background = primary ? "#2C2825" : "#F5F2EE");
+  const onLeave = (e: React.MouseEvent<HTMLElement>) =>
+    ((e.currentTarget as HTMLElement).style.background = primary ? "#1A1714" : "#FFFFFF");
+
+  if (onClick) {
+    return (
+      <button onClick={onClick} className="action-btn" style={baseStyle} onMouseEnter={onEnter} onMouseLeave={onLeave}>
+        <span>{children}</span>
+        <span>→</span>
+      </button>
+    );
+  }
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="action-btn"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
-        height: "44px",
-        padding: "0 16px",
-        borderRadius: "6px",
-        fontSize: "13px",
-        fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
-        fontWeight: 500,
-        cursor: "pointer",
-        textDecoration: "none",
-        transition: "background 150ms",
-        border: primary ? "none" : "1px solid #D4CEC8",
-        background: primary ? "#1A1714" : "#FFFFFF",
-        color: primary ? "#FFFFFF" : "#1A1714",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.background = primary ? "#2C2825" : "#F5F2EE";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.background = primary ? "#1A1714" : "#FFFFFF";
-      }}
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="action-btn" style={baseStyle} onMouseEnter={onEnter} onMouseLeave={onLeave}>
       <span>{children}</span>
       <span>→</span>
     </a>
@@ -96,11 +107,13 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
   const [notifyClient, setNotifyClient] = useState(false);
   const [calPrefs, setCalPrefs] = useState<CalendarPrefs | null>(null);
   const [selectedCalIndex, setSelectedCalIndex] = useState(0);
+  const [ios, setIos] = useState(false);
 
   useEffect(() => {
     const prefs = getCalendarPrefs();
     setCalPrefs(prefs);
     setSelectedCalIndex(prefs?.defaultIndex ?? 0);
+    setIos(isIOS());
   }, []);
 
   const selectedEmail = calPrefs?.calendars[selectedCalIndex]?.email ?? undefined;
@@ -270,7 +283,25 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <ActionBtn href={calLink} primary>Add to Google Calendar</ActionBtn>
+        {ios ? (
+          <ActionBtn
+            onClick={() => {
+              const ics = buildICSContent({
+                title: `${data.meetingType} — ${data.clientName}`,
+                date: data.date,
+                startTime: data.startTime,
+                endTime: data.endTime,
+                details: data.notes,
+              });
+              triggerICSDownload(ics, `${data.clientName.replace(/\s+/g, "-")}.ics`);
+            }}
+            primary
+          >
+            Add to Calendar
+          </ActionBtn>
+        ) : (
+          <ActionBtn href={calLink} primary>Add to Google Calendar</ActionBtn>
+        )}
         {smsLink && <ActionBtn href={smsLink}>Send SMS to {data.phone}</ActionBtn>}
         {emailLink && <ActionBtn href={emailLink}>Email {data.email}</ActionBtn>}
       </div>
