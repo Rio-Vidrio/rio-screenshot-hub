@@ -2,6 +2,8 @@
 
 import { NoteData } from "@/lib/types";
 import { buildTaskLink } from "@/lib/gcal";
+import ActionDivider from "@/components/ActionDivider";
+import ReminderButton from "@/components/ReminderButton";
 
 function ActionBtn({
   href,
@@ -144,6 +146,11 @@ export default function NoteCard({ data }: { data: NoteData }) {
         {data.actionable && (
           <ActionBtn href={taskLink}>Add to calendar as task</ActionBtn>
         )}
+        <ActionDivider label="or set a reminder" />
+        <ReminderButton
+          title={data.title}
+          description={`${data.content}\nCategory: ${data.category}`}
+        />
       </div>
     </div>
   );

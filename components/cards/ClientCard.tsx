@@ -9,6 +9,8 @@ import {
   buildICSContent,
   triggerICSDownload,
 } from "@/lib/gcal";
+import ActionDivider from "@/components/ActionDivider";
+import ReminderButton from "@/components/ReminderButton";
 import { useState, useEffect } from "react";
 
 interface ClientCardProps {
@@ -304,6 +306,11 @@ export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProp
         )}
         {smsLink && <ActionBtn href={smsLink}>Send SMS to {data.phone}</ActionBtn>}
         {emailLink && <ActionBtn href={emailLink}>Email {data.email}</ActionBtn>}
+        <ActionDivider label="or set a reminder" />
+        <ReminderButton
+          title={`Follow up — ${data.clientName}`}
+          description={`${data.meetingType} · ${data.notes}`}
+        />
       </div>
     </div>
   );

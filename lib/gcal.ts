@@ -172,6 +172,34 @@ export function buildReminderICSContent({
   });
 }
 
+/**
+ * Build a Google Calendar render URL for a custom date + time reminder.
+ * Used by ReminderButton. End time = start + 30 minutes.
+ */
+export function buildReminderUrl(
+  title: string,
+  description: string,
+  _calendarEmail: string,
+  date: string, // YYYY-MM-DD
+  time: string, // HH:MM
+): string {
+  const [yr, mo, dy] = date.split("-");
+  const [hr, mn] = time.split(":");
+  const startStr = `${yr}${mo}${dy}T${hr}${mn}00`;
+  const startMs = new Date(
+    parseInt(yr), parseInt(mo) - 1, parseInt(dy), parseInt(hr), parseInt(mn)
+  ).getTime();
+  const end = new Date(startMs + 30 * 60 * 1000);
+  const endStr = `${end.getFullYear()}${String(end.getMonth() + 1).padStart(2, "0")}${String(end.getDate()).padStart(2, "0")}T${String(end.getHours()).padStart(2, "0")}${String(end.getMinutes()).padStart(2, "0")}00`;
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: title,
+    dates: `${startStr}/${endStr}`,
+    details: description,
+  });
+  return appendAuthUser(`https://calendar.google.com/calendar/render?${params.toString()}`);
+}
+
 /** Trigger a .ics blob download — iOS Safari hands it off to Apple Calendar. */
 export function triggerICSDownload(content: string, filename = "event.ics"): void {
   const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });

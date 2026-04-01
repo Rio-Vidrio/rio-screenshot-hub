@@ -1,6 +1,8 @@
 "use client";
 
 import { SocialContentData } from "@/lib/types";
+import ActionDivider from "@/components/ActionDivider";
+import ReminderButton from "@/components/ReminderButton";
 
 function Field({ label, value, index }: { label: string; value: string; index: number }) {
   return (
@@ -168,6 +170,11 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         <CopyBtn text={data.suggestedCaption} label="Copy caption" primary />
         <CopyBtn text={`${data.hook}\n\n${data.hashtags}`} label="Copy hook + hashtags" />
+        <ActionDivider label="or set a reminder" />
+        <ReminderButton
+          title={data.hook}
+          description={`${data.suggestedCaption}\n\n${data.hashtags}\nPlatform: ${data.platform} · ${data.contentType}`}
+        />
       </div>
     </div>
   );

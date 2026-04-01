@@ -1,14 +1,8 @@
 "use client";
 
 import { MovieData } from "@/lib/types";
-import { useState, useEffect } from "react";
-import {
-  buildReminderLink,
-  getDefaultCalendarEmail,
-  isIOS,
-  buildReminderICSContent,
-  triggerICSDownload,
-} from "@/lib/gcal";
+import ActionDivider from "@/components/ActionDivider";
+import ReminderButton from "@/components/ReminderButton";
 
 function Field({ label, value, index, children }: { label: string; value?: string; index: number; children?: React.ReactNode }) {
   return (
@@ -49,53 +43,46 @@ function Field({ label, value, index, children }: { label: string; value?: strin
   );
 }
 
-function ActionBtn({ href, onClick, children, primary }: { href?: string; onClick?: () => void; children: React.ReactNode; primary?: boolean }) {
-  const baseStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    height: "44px",
-    padding: "0 16px",
-    borderRadius: "6px",
-    fontSize: "13px",
-    fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
-    fontWeight: 500,
-    cursor: "pointer",
-    textDecoration: "none",
-    transition: "background 150ms",
-    border: primary ? "none" : "1px solid #D4CEC8",
-    background: primary ? "#1A1714" : "#FFFFFF",
-    color: primary ? "#FFFFFF" : "#1A1714",
-  };
-  const onEnter = (e: React.MouseEvent<HTMLElement>) =>
-    ((e.currentTarget as HTMLElement).style.background = primary ? "#2C2825" : "#F5F2EE");
-  const onLeave = (e: React.MouseEvent<HTMLElement>) =>
-    ((e.currentTarget as HTMLElement).style.background = primary ? "#1A1714" : "#FFFFFF");
-
-  if (onClick) {
-    return (
-      <button onClick={onClick} className="action-btn" style={baseStyle} onMouseEnter={onEnter} onMouseLeave={onLeave}>
-        <span>{children}</span><span>→</span>
-      </button>
-    );
-  }
+function ActionBtn({ href, children, primary }: { href: string; children: React.ReactNode; primary?: boolean }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="action-btn" style={baseStyle} onMouseEnter={onEnter} onMouseLeave={onLeave}>
-      <span>{children}</span><span>→</span>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="action-btn"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        height: "44px",
+        padding: "0 16px",
+        borderRadius: "6px",
+        fontSize: "13px",
+        fontFamily: "var(--font-dm, 'DM Sans', sans-serif)",
+        fontWeight: 500,
+        cursor: "pointer",
+        textDecoration: "none",
+        transition: "background 150ms",
+        border: primary ? "none" : "1px solid #D4CEC8",
+        background: primary ? "#1A1714" : "#FFFFFF",
+        color: primary ? "#FFFFFF" : "#1A1714",
+      }}
+      onMouseEnter={(e) =>
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#2C2825" : "#F5F2EE")
+      }
+      onMouseLeave={(e) =>
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#1A1714" : "#FFFFFF")
+      }
+    >
+      <span>{children}</span>
+      <span>→</span>
     </a>
   );
 }
 
 export default function MovieCard({ data }: { data: MovieData }) {
-  const [ios, setIos] = useState(false);
-  useEffect(() => { setIos(isIOS()); }, []);
-
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(`${data.title} ${data.year} where to watch`)}`;
-  const reminderLink = buildReminderLink({
-    title: `Watch — ${data.title}`,
-    calendarEmail: getDefaultCalendarEmail(),
-  });
 
   return (
     <div>
@@ -154,14 +141,11 @@ export default function MovieCard({ data }: { data: MovieData }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         <ActionBtn href={searchUrl} primary>Find where to watch</ActionBtn>
-        {ios ? (
-          <ActionBtn onClick={() => {
-            const ics = buildReminderICSContent({ title: `Watch — ${data.title}` });
-            triggerICSDownload(ics, "movie-reminder.ics");
-          }}>Remind me at 8PM</ActionBtn>
-        ) : (
-          <ActionBtn href={reminderLink}>Remind me at 8PM</ActionBtn>
-        )}
+        <ActionDivider label="or set a reminder" />
+        <ReminderButton
+          title={`Watch: ${data.title}`}
+          description={`${data.platform} · ${data.genre} · ${data.rating}\n${data.synopsis}`}
+        />
       </div>
     </div>
   );

@@ -1,14 +1,8 @@
 "use client";
 
 import { RestaurantData } from "@/lib/types";
-import {
-  buildReminderLink,
-  getDefaultCalendarEmail,
-  isIOS,
-  buildReminderICSContent,
-  triggerICSDownload,
-} from "@/lib/gcal";
-import { useState, useEffect } from "react";
+import ActionDivider from "@/components/ActionDivider";
+import ReminderButton from "@/components/ReminderButton";
 
 function Field({ label, value, index }: { label: string; value: string; index: number }) {
   return (
@@ -117,15 +111,7 @@ function ActionBtn({
 }
 
 export default function RestaurantCard({ data }: { data: RestaurantData }) {
-  const [ios, setIos] = useState(false);
-  useEffect(() => { setIos(isIOS()); }, []);
-
   const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(data.mapsQuery)}`;
-  const reminderLink = buildReminderLink({
-    title: `Dinner — ${data.name}`,
-    details: mapsUrl,
-    calendarEmail: getDefaultCalendarEmail(),
-  });
   const shareText = `${data.name} — ${data.cuisine} ${data.priceRange} | ${mapsUrl}`;
 
   const fields = [
@@ -157,17 +143,14 @@ export default function RestaurantCard({ data }: { data: RestaurantData }) {
         {data.reservationUrl && (
           <ActionBtn href={data.reservationUrl}>Reserve a table</ActionBtn>
         )}
-        {ios ? (
-          <ActionBtn onClick={() => {
-            const ics = buildReminderICSContent({ title: `Dinner — ${data.name}`, details: mapsUrl });
-            triggerICSDownload(ics, "restaurant-reminder.ics");
-          }}>Remind me at 8PM</ActionBtn>
-        ) : (
-          <ActionBtn href={reminderLink}>Remind me at 8PM</ActionBtn>
-        )}
         <ActionBtn onClick={() => navigator.clipboard.writeText(shareText)}>
           Copy share text
         </ActionBtn>
+        <ActionDivider label="or set a reminder" />
+        <ReminderButton
+          title={data.name}
+          description={`${data.cuisine} · ${data.priceRange} · ${data.location}\nMaps: https://maps.google.com/?q=${encodeURIComponent(data.mapsQuery)}`}
+        />
       </div>
     </div>
   );

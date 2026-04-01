@@ -1,6 +1,8 @@
 "use client";
 
 import { MarketStatsData } from "@/lib/types";
+import ActionDivider from "@/components/ActionDivider";
+import ReminderButton from "@/components/ReminderButton";
 
 function CopyBtn({ text, label, primary }: { text: string; label: string; primary?: boolean }) {
   return (
@@ -137,6 +139,11 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         <CopyBtn text={statsText} label="Copy stats for content" primary />
         <CopyBtn text={fullText} label="Copy full analysis" />
+        <ActionDivider label="or set a reminder" />
+        <ReminderButton
+          title={data.headline}
+          description={`${data.keyStats.join('\n')}\n\n${data.relevance}\nSource: ${data.source}`}
+        />
       </div>
     </div>
   );
