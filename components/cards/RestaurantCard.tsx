@@ -1,7 +1,7 @@
 "use client";
 
 import { RestaurantData } from "@/lib/types";
-import { buildReminderLink } from "@/lib/gcal";
+import { buildReminderLink, getDefaultCalendarEmail } from "@/lib/gcal";
 
 function Field({ label, value, index }: { label: string; value: string; index: number }) {
   return (
@@ -111,7 +111,11 @@ function ActionBtn({
 
 export default function RestaurantCard({ data }: { data: RestaurantData }) {
   const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(data.mapsQuery)}`;
-  const reminderLink = buildReminderLink({ title: `Dinner — ${data.name}`, details: mapsUrl });
+  const reminderLink = buildReminderLink({
+    title: `Dinner — ${data.name}`,
+    details: mapsUrl,
+    calendarEmail: getDefaultCalendarEmail(),
+  });
   const shareText = `${data.name} — ${data.cuisine} ${data.priceRange} | ${mapsUrl}`;
 
   const fields = [

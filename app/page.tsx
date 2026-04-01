@@ -68,7 +68,7 @@ export default function Home() {
 
   // Check for calendar email on first load
   useEffect(() => {
-    const email = localStorage.getItem("calendarEmail");
+    const email = localStorage.getItem("calendarPrefs");
     if (!email) {
       setCalendarSetupIsUpdate(false);
       setShowCalendarSetup(true);
@@ -357,7 +357,7 @@ export default function Home() {
           {/* Result */}
           {state.status === "result" && (
             <>
-              <ResultCard result={state.result} />
+              <ResultCard result={state.result} onOpenCalendarSetup={openCalendarSettings} />
               <button
                 onClick={() => setState({ status: "idle" })}
                 className="action-btn"

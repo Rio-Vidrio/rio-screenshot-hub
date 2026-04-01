@@ -1,7 +1,7 @@
 "use client";
 
 import { MovieData } from "@/lib/types";
-import { buildReminderLink } from "@/lib/gcal";
+import { buildReminderLink, getDefaultCalendarEmail } from "@/lib/gcal";
 
 function Field({ label, value, index, children }: { label: string; value?: string; index: number; children?: React.ReactNode }) {
   return (
@@ -82,7 +82,10 @@ function ActionBtn({ href, children, primary }: { href: string; children: React.
 
 export default function MovieCard({ data }: { data: MovieData }) {
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(`${data.title} ${data.year} where to watch`)}`;
-  const reminderLink = buildReminderLink({ title: `Watch — ${data.title}` });
+  const reminderLink = buildReminderLink({
+    title: `Watch — ${data.title}`,
+    calendarEmail: getDefaultCalendarEmail(),
+  });
 
   return (
     <div>

@@ -1,8 +1,13 @@
 "use client";
 
 import { ClientConvoData } from "@/lib/types";
-import { buildCalendarEventLink } from "@/lib/gcal";
-import { useState } from "react";
+import { buildCalendarEventLink, getCalendarPrefs, CalendarPrefs } from "@/lib/gcal";
+import { useState, useEffect } from "react";
+
+interface ClientCardProps {
+  data: ClientConvoData;
+  onOpenCalendarSetup?: () => void;
+}
 
 function Field({ label, value, index }: { label: string; value: string; index: number }) {
   return (
@@ -50,32 +55,30 @@ function ActionBtn({
   children: React.ReactNode;
   primary?: boolean;
 }) {
-  const base = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    height: "44px",
-    padding: "0 16px",
-    borderRadius: "6px",
-    fontSize: "13px",
-    fontFamily: "'DM Sans', sans-serif",
-    fontWeight: 500,
-    cursor: "pointer",
-    textDecoration: "none",
-    transition: "background 150ms",
-    border: primary ? "none" : "1px solid #D4CEC8",
-    background: primary ? "#1A1714" : "#FFFFFF",
-    color: primary ? "#FFFFFF" : "#1A1714",
-  };
-
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="action-btn"
-      style={base}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        height: "44px",
+        padding: "0 16px",
+        borderRadius: "6px",
+        fontSize: "13px",
+        fontFamily: "'DM Sans', sans-serif",
+        fontWeight: 500,
+        cursor: "pointer",
+        textDecoration: "none",
+        transition: "background 150ms",
+        border: primary ? "none" : "1px solid #D4CEC8",
+        background: primary ? "#1A1714" : "#FFFFFF",
+        color: primary ? "#FFFFFF" : "#1A1714",
+      }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLAnchorElement).style.background = primary ? "#2C2825" : "#F5F2EE";
       }}
@@ -89,8 +92,18 @@ function ActionBtn({
   );
 }
 
-export default function ClientCard({ data }: { data: ClientConvoData }) {
+export default function ClientCard({ data, onOpenCalendarSetup }: ClientCardProps) {
   const [notifyClient, setNotifyClient] = useState(false);
+  const [calPrefs, setCalPrefs] = useState<CalendarPrefs | null>(null);
+  const [selectedCalIndex, setSelectedCalIndex] = useState(0);
+
+  useEffect(() => {
+    const prefs = getCalendarPrefs();
+    setCalPrefs(prefs);
+    setSelectedCalIndex(prefs?.defaultIndex ?? 0);
+  }, []);
+
+  const selectedEmail = calPrefs?.calendars[selectedCalIndex]?.email ?? undefined;
 
   const calLink = buildCalendarEventLink({
     title: `${data.meetingType} — ${data.clientName}`,
@@ -98,6 +111,7 @@ export default function ClientCard({ data }: { data: ClientConvoData }) {
     startTime: data.startTime,
     endTime: data.endTime,
     details: data.notes,
+    calendarEmail: selectedEmail,
   });
 
   const smsLink = data.phone ? `sms:${data.phone.replace(/\D/g, "")}` : null;
@@ -192,6 +206,67 @@ export default function ClientCard({ data }: { data: ClientConvoData }) {
         >
           Notify client
         </span>
+      </div>
+
+      {/* Calendar picker row */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          marginBottom: "8px",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 300,
+            fontSize: "12px",
+            color: "#A39E99",
+            flexShrink: 0,
+          }}
+        >
+          Add to
+        </span>
+        {calPrefs && calPrefs.calendars.length > 0 ? (
+          <select
+            value={selectedCalIndex}
+            onChange={(e) => setSelectedCalIndex(Number(e.target.value))}
+            style={{
+              flex: 1,
+              padding: "6px 10px",
+              border: "1px solid #D4CEC8",
+              borderRadius: "6px",
+              fontSize: "12px",
+              fontFamily: "'DM Sans', sans-serif",
+              color: "#1A1714",
+              background: "#FAFAF9",
+              cursor: "pointer",
+              outline: "none",
+            }}
+          >
+            {calPrefs.calendars.map((cal, i) => (
+              <option key={i} value={i}>
+                {cal.label || cal.email}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <button
+            onClick={onOpenCalendarSetup}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#C8A882",
+              fontSize: "12px",
+              fontFamily: "'DM Sans', sans-serif",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            Set up calendar →
+          </button>
+        )}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>

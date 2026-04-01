@@ -36,9 +36,10 @@ function getTitle(result: AnalysisResult): string {
 
 interface ResultCardProps {
   result: AnalysisResult;
+  onOpenCalendarSetup?: () => void;
 }
 
-export default function ResultCard({ result }: ResultCardProps) {
+export default function ResultCard({ result, onOpenCalendarSetup }: ResultCardProps) {
   const typeLabel = TYPE_LABELS[result.type] || result.type;
   const title = getTitle(result);
 
@@ -88,7 +89,7 @@ export default function ResultCard({ result }: ResultCardProps) {
 
       {/* Body */}
       <div style={{ padding: "28px" }}>
-        {result.type === "CLIENT_CONVO" && <ClientCard data={result} />}
+        {result.type === "CLIENT_CONVO" && <ClientCard data={result} onOpenCalendarSetup={onOpenCalendarSetup} />}
         {result.type === "RESTAURANT" && <RestaurantCard data={result} />}
         {result.type === "MOVIE" && <MovieCard data={result} />}
         {result.type === "SOCIAL_CONTENT" && <ContentCard data={result} />}

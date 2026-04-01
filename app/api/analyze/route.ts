@@ -20,9 +20,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const today = new Date().toLocaleDateString("en-US", {
+      timeZone: "America/Phoenix",
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const todayISO = new Date().toLocaleDateString("en-CA", {
+      timeZone: "America/Phoenix",
+    });
+
     const result = await analyzeScreenshot(
       imageBase64,
-      mediaType as "image/jpeg" | "image/png" | "image/gif" | "image/webp"
+      mediaType as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+      today,
+      todayISO
     );
 
     return NextResponse.json(result);

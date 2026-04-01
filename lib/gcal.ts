@@ -3,21 +3,37 @@
  * All times are local — no timezone conversion, Rio is in Phoenix (MST, no DST).
  */
 
-function getCalendarEmail(): string {
-  if (typeof window === "undefined") return "";
-  return localStorage.getItem("calendarEmail") || "";
+export interface CalendarPrefs {
+  calendars: { label: string; email: string }[];
+  defaultIndex: number;
 }
 
-function appendAuthUser(url: string): string {
-  const email = getCalendarEmail();
-  if (!email) return url;
-  return `${url}&authuser=${encodeURIComponent(email)}`;
+export function getCalendarPrefs(): CalendarPrefs | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("calendarPrefs");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function getDefaultCalendarEmail(): string {
+  const prefs = getCalendarPrefs();
+  if (!prefs || !prefs.calendars.length) return "";
+  return prefs.calendars[prefs.defaultIndex]?.email || prefs.calendars[0].email;
 }
 
 function toGCalDate(dateStr: string, timeStr: string): string {
   const [year, month, day] = dateStr.split("-");
   const [hour, minute] = timeStr.split(":");
   return `${year}${month}${day}T${hour}${minute}00`;
+}
+
+function appendAuthUser(url: string, calendarEmail?: string): string {
+  const email = calendarEmail ?? getDefaultCalendarEmail();
+  if (!email) return url;
+  return `${url}&authuser=${encodeURIComponent(email)}`;
 }
 
 export function buildCalendarEventLink({
@@ -27,6 +43,7 @@ export function buildCalendarEventLink({
   endTime,
   details = "",
   location = "",
+  calendarEmail,
 }: {
   title: string;
   date: string;
@@ -34,6 +51,7 @@ export function buildCalendarEventLink({
   endTime: string;
   details?: string;
   location?: string;
+  calendarEmail?: string;
 }): string {
   const start = toGCalDate(date, startTime);
   const end = toGCalDate(date, endTime);
@@ -44,15 +62,20 @@ export function buildCalendarEventLink({
     details,
     location,
   });
-  return appendAuthUser(`https://calendar.google.com/calendar/render?${params.toString()}`);
+  return appendAuthUser(
+    `https://calendar.google.com/calendar/render?${params.toString()}`,
+    calendarEmail
+  );
 }
 
 export function buildReminderLink({
   title,
   details = "",
+  calendarEmail,
 }: {
   title: string;
   details?: string;
+  calendarEmail?: string;
 }): string {
   const now = new Date();
   const year = now.getFullYear();
@@ -66,9 +89,20 @@ export function buildReminderLink({
     dates: `${start}/${end}`,
     details,
   });
-  return appendAuthUser(`https://calendar.google.com/calendar/render?${params.toString()}`);
+  return appendAuthUser(
+    `https://calendar.google.com/calendar/render?${params.toString()}`,
+    calendarEmail
+  );
 }
 
-export function buildTaskLink({ title, details = "" }: { title: string; details?: string }): string {
-  return buildReminderLink({ title: `[Task] ${title}`, details });
+export function buildTaskLink({
+  title,
+  details = "",
+  calendarEmail,
+}: {
+  title: string;
+  details?: string;
+  calendarEmail?: string;
+}): string {
+  return buildReminderLink({ title: `[Task] ${title}`, details, calendarEmail });
 }

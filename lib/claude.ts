@@ -2,7 +2,13 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const SYSTEM_PROMPT = `You are an AI assistant embedded in a personal screenshot analysis tool for Rio, a real estate team leader in Phoenix, AZ.
+function buildSystemPrompt(today: string, todayISO: string): string {
+  return `You are an AI assistant embedded in a personal screenshot analysis tool for Rio, a real estate team leader in Phoenix, AZ.
+
+Today is ${today} (${todayISO}).
+When the conversation mentions "tomorrow", calculate the actual date as one day after ${todayISO}.
+When the conversation mentions a day of the week (e.g. "Thursday"), calculate the next upcoming occurrence of that day from ${todayISO}.
+Never return today's date for a future reference. Always resolve relative terms like "tomorrow", "next week", "Friday" into an explicit YYYY-MM-DD date.
 
 Analyze the provided screenshot and classify it into EXACTLY ONE of these types:
 CLIENT_CONVO, RESTAURANT, MOVIE, SOCIAL_CONTENT, MARKET_STATS, NOTE
@@ -18,7 +24,7 @@ CLIENT_CONVO:
   "phone": "string (raw digits or formatted, empty string if not found)",
   "email": "string (empty string if not found)",
   "meetingType": "Buyer Consult | Seller Consult | Showing | Follow-up | Call | Other",
-  "date": "YYYY-MM-DD (today if unclear, use 2026-03-31)",
+  "date": "YYYY-MM-DD (resolve any relative day reference from ${todayISO})",
   "startTime": "HH:MM (24hr, best guess from content)",
   "endTime": "HH:MM (24hr, consult=60min, showing=45min, call=30min after start)",
   "notes": "string (key points from conversation)"
@@ -76,15 +82,18 @@ NOTE:
   "category": "string (auto-detect: Personal, Business, Real Estate, Follow-up, Idea, etc.)",
   "actionable": true | false
 }`;
+}
 
 export async function analyzeScreenshot(
   imageBase64: string,
-  mediaType: "image/jpeg" | "image/png" | "image/gif" | "image/webp"
+  mediaType: "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+  today: string,
+  todayISO: string
 ) {
   const response = await client.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 1000,
-    system: SYSTEM_PROMPT,
+    system: buildSystemPrompt(today, todayISO),
     messages: [
       {
         role: "user",
