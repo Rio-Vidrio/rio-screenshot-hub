@@ -197,17 +197,27 @@ export default function Home() {
           background: "#FFFFFF",
         }}
       >
-        <span
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontWeight: 400,
-            fontSize: "15px",
-            color: "#1A1714",
-            letterSpacing: "0.01em",
-          }}
-        >
-          Rio Screenshot Hub
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <svg width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="52" height="52" rx="10" fill="#1A1714"/>
+            <rect x="22" y="22" width="28" height="4" rx="2" fill="#C8A882"/>
+            <rect x="22" y="32" width="20" height="3" rx="1.5" fill="#C8A882" opacity="0.6"/>
+            <rect x="22" y="40" width="24" height="3" rx="1.5" fill="#C8A882" opacity="0.4"/>
+            <rect x="44" y="44" width="10" height="10" rx="2" fill="#C8A882"/>
+            <rect x="47" y="47" width="4" height="4" rx="1" fill="#1A1714"/>
+          </svg>
+          <span
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 400,
+              fontSize: "15px",
+              color: "#1A1714",
+              letterSpacing: "0.01em",
+            }}
+          >
+            Rio Screenshot Hub
+          </span>
+        </div>
         <button
           onClick={openCalendarSettings}
           title="Calendar settings"

@@ -3,7 +3,17 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Rio Screenshot Hub",
-  description: "Personal AI-powered screenshot interpreter for Rio",
+  description: "Drop any screenshot. AI reads it and routes it automatically.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "Rio Screenshot Hub",
+    description: "Drop any screenshot. AI reads it and routes it automatically.",
+    images: ["/og-image.png"],
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -20,6 +30,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body
         className="min-h-full antialiased"
