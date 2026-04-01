@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import UploadZone from "@/components/UploadZone";
 import ResultCard from "@/components/ResultCard";
 import SessionPanel from "@/components/SessionPanel";
+import CalendarSetup from "@/components/CalendarSetup";
 import { AnalysisResult, SessionItem } from "@/lib/types";
 
 const STORAGE_KEY = "rio-screenshot-hub-sessions";
@@ -21,7 +22,6 @@ function fileToBase64(file: File): Promise<string> {
     const reader = new FileReader();
     reader.onload = () => {
       const result = reader.result as string;
-      // strip data URL prefix
       const base64 = result.split(",")[1];
       resolve(base64);
     };
@@ -30,13 +30,50 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
+function GearIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 10a2 2 0 100-4 2 2 0 000 4z"
+        stroke="#A39E99"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M13.3 6.7l-.8-.5a5.2 5.2 0 000-0.4l.8-.5a.6.6 0 00.2-.8l-1-1.7a.6.6 0 00-.8-.2l-.9.5a5 5 0 00-.7-.4V2a.6.6 0 00-.6-.6H6.5A.6.6 0 005.9 2v1a5 5 0 00-.7.4l-.9-.5a.6.6 0 00-.8.2l-1 1.7a.6.6 0 00.2.8l.8.5a5.2 5.2 0 000 .4l-.8.5a.6.6 0 00-.2.8l1 1.7a.6.6 0 00.8.2l.9-.5c.2.1.4.3.7.4v1c0 .3.3.6.6.6H9.5c.3 0 .6-.3.6-.6v-1c.3-.1.5-.2.7-.4l.9.5c.3.1.6 0 .8-.2l1-1.7a.6.6 0 00-.2-.8z"
+        stroke="#A39E99"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [state, setState] = useState<AppState>({ status: "idle" });
   const [sessions, setSessions] = useState<SessionItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [labelIndex, setLabelIndex] = useState(0);
   const [currentFile, setCurrentFile] = useState<{ base64: string; mediaType: string } | null>(null);
+  const [showCalendarSetup, setShowCalendarSetup] = useState(false);
+  const [calendarSetupIsUpdate, setCalendarSetupIsUpdate] = useState(false);
   const labelCycleRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Check for calendar email on first load
+  useEffect(() => {
+    const email = localStorage.getItem("calendarEmail");
+    if (!email) {
+      setCalendarSetupIsUpdate(false);
+      setShowCalendarSetup(true);
+    }
+  }, []);
 
   // Load sessions from localStorage
   useEffect(() => {
@@ -87,7 +124,6 @@ export default function Home() {
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || "Analysis failed");
 
       const result = data as AnalysisResult;
@@ -134,98 +170,107 @@ export default function Home() {
     }
   };
 
+  const openCalendarSettings = () => {
+    setCalendarSetupIsUpdate(true);
+    setShowCalendarSetup(true);
+  };
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#0e0e0e",
-        padding: "0",
-      }}
-    >
+    <div style={{ minHeight: "100vh", background: "#FAFAF9" }}>
+      {/* Calendar setup modal */}
+      {showCalendarSetup && (
+        <CalendarSetup
+          isUpdate={calendarSetupIsUpdate}
+          onDismiss={() => setShowCalendarSetup(false)}
+        />
+      )}
+
       {/* Top bar */}
       <header
         style={{
-          borderBottom: "1px solid #1a1a1a",
-          padding: "0 24px",
-          height: "52px",
+          borderBottom: "1px solid #E8E4DF",
+          padding: "0 28px",
+          height: "56px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          background: "#FFFFFF",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: "#f0a500",
-              display: "inline-block",
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: "13px",
-              fontWeight: 500,
-              color: "#e8e8e8",
-              letterSpacing: "0.04em",
-            }}
-          >
-            Rio Screenshot Hub
-          </span>
-        </div>
         <span
           style={{
-            fontSize: "11px",
-            color: "#333",
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: 400,
+            fontSize: "15px",
+            color: "#1A1714",
+            letterSpacing: "0.01em",
           }}
         >
-          PHX
+          Rio Screenshot Hub
         </span>
+        <button
+          onClick={openCalendarSettings}
+          title="Calendar settings"
+          style={{
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            padding: "6px",
+            borderRadius: "6px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "background 150ms",
+          }}
+          onMouseEnter={(e) =>
+            ((e.currentTarget as HTMLButtonElement).style.background = "#F5F2EE")
+          }
+          onMouseLeave={(e) =>
+            ((e.currentTarget as HTMLButtonElement).style.background = "transparent")
+          }
+        >
+          <GearIcon />
+        </button>
       </header>
 
       {/* Main layout */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 320px",
-          gap: "24px",
-          maxWidth: "1200px",
+          gridTemplateColumns: "1fr 300px",
+          gap: "28px",
+          maxWidth: "1100px",
           margin: "0 auto",
-          padding: "24px",
-          minHeight: "calc(100vh - 52px)",
+          padding: "28px",
+          minHeight: "calc(100vh - 56px)",
           alignItems: "start",
         }}
         className="main-grid"
       >
         {/* Left column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {/* Upload zone — always visible */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+          {/* Upload zone */}
           {state.status !== "analyzing" && (
-            <UploadZone
-              onFile={handleFile}
-              disabled={false}
-            />
+            <UploadZone onFile={handleFile} disabled={false} />
           )}
 
           {/* Analyzing state */}
           {state.status === "analyzing" && (
             <div
               style={{
-                background: "#161616",
-                border: "1px solid #2a2a2a",
-                borderRadius: "8px",
-                padding: "32px 24px",
+                background: "#FFFFFF",
+                border: "1px solid #E8E4DF",
+                borderRadius: "10px",
+                padding: "36px 28px",
               }}
             >
               <div
                 style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 300,
                   fontSize: "13px",
-                  color: "#666",
-                  marginBottom: "12px",
-                  fontFamily: "'JetBrains Mono', monospace",
+                  color: "#6B6560",
+                  marginBottom: "14px",
                 }}
               >
                 {CYCLE_LABELS[labelIndex]}
@@ -233,7 +278,7 @@ export default function Home() {
               <div
                 style={{
                   height: "3px",
-                  background: "#1f1f1f",
+                  background: "#F0ECE8",
                   borderRadius: "2px",
                   overflow: "hidden",
                 }}
@@ -242,7 +287,7 @@ export default function Home() {
                   className="progress-fill"
                   style={{
                     height: "100%",
-                    background: "#f0a500",
+                    background: "#C8A882",
                     borderRadius: "2px",
                     width: "0%",
                   }}
@@ -255,34 +300,44 @@ export default function Home() {
           {state.status === "error" && (
             <div
               style={{
-                background: "#2a0a0a",
-                border: "1px solid #5a1a1a",
-                borderRadius: "8px",
-                padding: "20px",
+                background: "#FDF5F5",
+                border: "1px solid #E8C8C8",
+                borderLeft: "3px solid #B85450",
+                borderRadius: "10px",
+                padding: "24px 28px",
               }}
             >
               <div
                 style={{
+                  fontFamily: "'DM Sans', sans-serif",
                   fontSize: "13px",
-                  color: "#ff6b6b",
+                  color: "#B85450",
                   marginBottom: "16px",
-                  fontFamily: "'JetBrains Mono', monospace",
                 }}
               >
-                Error: {state.message}
+                {state.message}
               </div>
               <button
                 onClick={handleRetry}
+                className="action-btn"
                 style={{
-                  padding: "8px 16px",
-                  background: "transparent",
-                  border: "1px solid #5a1a1a",
-                  borderRadius: "4px",
-                  color: "#ff6b6b",
+                  padding: "10px 18px",
+                  background: "#1A1714",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#FFFFFF",
                   fontSize: "13px",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 500,
                   cursor: "pointer",
-                  fontFamily: "'Inter', sans-serif",
+                  transition: "background 150ms",
                 }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLButtonElement).style.background = "#2C2825")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLButtonElement).style.background = "#1A1714")
+                }
               >
                 Retry →
               </button>
@@ -295,34 +350,51 @@ export default function Home() {
               <ResultCard result={state.result} />
               <button
                 onClick={() => setState({ status: "idle" })}
+                className="action-btn"
                 style={{
                   width: "100%",
-                  padding: "10px 16px",
+                  height: "44px",
+                  padding: "0 18px",
                   background: "transparent",
-                  border: "1px solid #2a2a2a",
-                  borderRadius: "4px",
-                  color: "#555",
-                  fontSize: "12px",
+                  border: "1px solid #D4CEC8",
+                  borderRadius: "6px",
+                  color: "#6B6560",
+                  fontSize: "13px",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 400,
                   cursor: "pointer",
                   textAlign: "left",
-                  fontFamily: "'Inter', sans-serif",
-                  transition: "color 150ms",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  transition: "background 150ms, color 150ms",
                 }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLButtonElement).style.color = "#e8e8e8")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLButtonElement).style.color = "#555")
-                }
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "#F5F2EE";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#1A1714";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#6B6560";
+                }}
               >
-                + Analyze another screenshot →
+                <span>Analyze another screenshot</span>
+                <span>→</span>
               </button>
             </>
           )}
         </div>
 
         {/* Right column — session history */}
-        <div style={{ position: "sticky", top: "24px", maxHeight: "calc(100vh - 76px)", display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            position: "sticky",
+            top: "28px",
+            maxHeight: "calc(100vh - 84px)",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <SessionPanel
             items={sessions}
             activeId={activeId}
@@ -332,7 +404,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Responsive styles */}
       <style>{`
         @media (max-width: 768px) {
           .main-grid {

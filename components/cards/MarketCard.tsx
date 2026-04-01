@@ -2,32 +2,37 @@
 
 import { MarketStatsData } from "@/lib/types";
 
-function CopyBtn({ text, label }: { text: string; label: string }) {
+function CopyBtn({ text, label, primary }: { text: string; label: string; primary?: boolean }) {
   return (
     <button
       onClick={() => navigator.clipboard.writeText(text)}
+      className="action-btn"
       style={{
-        display: "block",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
         width: "100%",
-        padding: "10px 16px",
-        background: "transparent",
-        border: "1px solid #2a2a2a",
-        borderRadius: "4px",
-        color: "#e8e8e8",
+        height: "44px",
+        padding: "0 16px",
+        borderRadius: "6px",
         fontSize: "13px",
-        textAlign: "left",
+        fontFamily: "'DM Sans', sans-serif",
+        fontWeight: 500,
         cursor: "pointer",
-        transition: "border-color 150ms",
-        fontFamily: "'Inter', sans-serif",
+        transition: "background 150ms",
+        border: primary ? "none" : "1px solid #D4CEC8",
+        background: primary ? "#1A1714" : "#FFFFFF",
+        color: primary ? "#FFFFFF" : "#1A1714",
       }}
       onMouseEnter={(e) =>
-        ((e.currentTarget as HTMLButtonElement).style.borderColor = "#f0a500")
+        ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#2C2825" : "#F5F2EE")
       }
       onMouseLeave={(e) =>
-        ((e.currentTarget as HTMLButtonElement).style.borderColor = "#2a2a2a")
+        ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#1A1714" : "#FFFFFF")
       }
     >
-      {label} →
+      <span>{label}</span>
+      <span>→</span>
     </button>
   );
 }
@@ -37,31 +42,19 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
   const fullText = `${data.headline}\n\nKey Stats:\n${statsText}\n\nSource: ${data.source}\n\n${data.relevance}`;
 
   return (
-    <div className="card-reveal">
-      {/* Headline */}
-      <div
-        style={{
-          fontSize: "15px",
-          fontWeight: 600,
-          color: "#e8e8e8",
-          marginBottom: "16px",
-          lineHeight: "1.4",
-        }}
-      >
-        {data.headline}
-      </div>
-
+    <div>
       {/* Source tag */}
       <div style={{ marginBottom: "16px" }}>
         <span
           style={{
-            background: "#222",
-            border: "1px solid #333",
-            color: "#aaa",
+            background: "#F5F2EE",
+            border: "1px solid #E8E4DF",
+            color: "#6B6560",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 500,
             fontSize: "11px",
-            padding: "3px 8px",
-            borderRadius: "3px",
-            fontFamily: "'JetBrains Mono', monospace",
+            padding: "3px 10px",
+            borderRadius: "4px",
           }}
         >
           {data.source || "Unknown source"}
@@ -69,42 +62,55 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
       </div>
 
       {/* Key stats */}
-      <div style={{ marginBottom: "16px" }}>
+      <div style={{ marginBottom: "18px" }}>
         <div
           style={{
-            color: "#666",
-            fontSize: "11px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 500,
+            fontSize: "10px",
+            color: "#A39E99",
             textTransform: "uppercase",
             letterSpacing: "0.08em",
-            marginBottom: "8px",
+            marginBottom: "10px",
           }}
         >
           Key Stats
         </div>
-        <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "6px",
+          }}
+        >
           {data.keyStats.map((stat, i) => (
-            <li
+            <div
               key={i}
+              className="field-cell"
               style={{
+                background: "#F5F2EE",
+                borderRadius: "6px",
+                padding: "10px 12px",
                 fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "13px",
-                color: "#e8e8e8",
-                padding: "6px 0",
-                borderBottom: "1px solid #1f1f1f",
+                fontSize: "12px",
+                color: "#1A1714",
+                animationDelay: `${i * 40}ms`,
               }}
             >
               {stat}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
 
       {/* Relevance */}
       <div style={{ marginBottom: "20px" }}>
         <div
           style={{
-            color: "#666",
-            fontSize: "11px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 500,
+            fontSize: "10px",
+            color: "#A39E99",
             textTransform: "uppercase",
             letterSpacing: "0.08em",
             marginBottom: "8px",
@@ -114,12 +120,13 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
         </div>
         <div
           style={{
-            background: "#1a1a1a",
-            border: "1px solid #2a2a2a",
+            background: "#F5F2EE",
             borderRadius: "6px",
-            padding: "12px 14px",
+            padding: "14px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 300,
             fontSize: "13px",
-            color: "#aaa",
+            color: "#1A1714",
             lineHeight: "1.7",
           }}
         >
@@ -128,7 +135,7 @@ export default function MarketCard({ data }: { data: MarketStatsData }) {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <CopyBtn text={statsText} label="Copy stats for content" />
+        <CopyBtn text={statsText} label="Copy stats for content" primary />
         <CopyBtn text={fullText} label="Copy full analysis" />
       </div>
     </div>

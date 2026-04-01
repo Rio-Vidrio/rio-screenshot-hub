@@ -3,57 +3,79 @@
 import { MovieData } from "@/lib/types";
 import { buildReminderLink } from "@/lib/gcal";
 
-const LABEL_STYLE = {
-  color: "#666",
-  fontSize: "11px",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.08em",
-  marginBottom: "2px",
-};
-
-const VALUE_STYLE = {
-  fontFamily: "'JetBrains Mono', monospace",
-  color: "#e8e8e8",
-  fontSize: "13px",
-};
-
-function Field({ label, value }: { label: string; value: string }) {
+function Field({ label, value, index, children }: { label: string; value?: string; index: number; children?: React.ReactNode }) {
   return (
-    <div>
-      <div style={LABEL_STYLE}>{label}</div>
-      <div style={VALUE_STYLE}>{value || "—"}</div>
+    <div
+      className="field-cell"
+      style={{
+        background: "#F5F2EE",
+        padding: "10px",
+        borderRadius: "6px",
+        animationDelay: `${index * 40}ms`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 500,
+          fontSize: "10px",
+          color: "#A39E99",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: "3px",
+        }}
+      >
+        {label}
+      </div>
+      {children || (
+        <div
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: "12px",
+            color: "#1A1714",
+          }}
+        >
+          {value || "—"}
+        </div>
+      )}
     </div>
   );
 }
 
-function ActionBtn({ href, children }: { href: string; children: React.ReactNode }) {
+function ActionBtn({ href, children, primary }: { href: string; children: React.ReactNode; primary?: boolean }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      className="action-btn"
       style={{
-        display: "block",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
         width: "100%",
-        padding: "10px 16px",
-        background: "transparent",
-        border: "1px solid #2a2a2a",
-        borderRadius: "4px",
-        color: "#e8e8e8",
+        height: "44px",
+        padding: "0 16px",
+        borderRadius: "6px",
         fontSize: "13px",
-        textDecoration: "none",
-        textAlign: "left",
+        fontFamily: "'DM Sans', sans-serif",
+        fontWeight: 500,
         cursor: "pointer",
-        transition: "border-color 150ms",
+        textDecoration: "none",
+        transition: "background 150ms",
+        border: primary ? "none" : "1px solid #D4CEC8",
+        background: primary ? "#1A1714" : "#FFFFFF",
+        color: primary ? "#FFFFFF" : "#1A1714",
       }}
       onMouseEnter={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#f0a500")
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#2C2825" : "#F5F2EE")
       }
       onMouseLeave={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#2a2a2a")
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#1A1714" : "#FFFFFF")
       }
     >
-      {children} →
+      <span>{children}</span>
+      <span>→</span>
     </a>
   );
 }
@@ -63,59 +85,62 @@ export default function MovieCard({ data }: { data: MovieData }) {
   const reminderLink = buildReminderLink({ title: `Watch — ${data.title}` });
 
   return (
-    <div className="card-reveal">
-      {/* Synopsis */}
-      <div
-        style={{
-          background: "#1a1a1a",
-          border: "1px solid #2a2a2a",
-          borderRadius: "6px",
-          padding: "12px 14px",
-          marginBottom: "20px",
-          fontSize: "13px",
-          color: "#aaa",
-          lineHeight: "1.6",
-        }}
-      >
-        {data.synopsis}
-      </div>
+    <div>
+      {data.synopsis && (
+        <div
+          style={{
+            background: "#F5F2EE",
+            borderRadius: "6px",
+            padding: "14px",
+            marginBottom: "20px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 300,
+            fontSize: "13px",
+            color: "#6B6560",
+            lineHeight: "1.7",
+          }}
+        >
+          {data.synopsis}
+        </div>
+      )}
 
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: "12px 24px",
+          gap: "8px",
           marginBottom: "20px",
         }}
       >
-        <Field label="Title" value={data.title} />
-        <Field label="Year" value={data.year} />
-        <Field label="Genre" value={data.genre} />
-        <Field label="Rating" value={data.rating} />
-        <div>
-          <div style={LABEL_STYLE}>Platform</div>
+        <Field label="Title" value={data.title} index={0} />
+        <Field label="Year" value={data.year} index={1} />
+        <Field label="Genre" value={data.genre} index={2} />
+        <Field label="Rating" value={data.rating} index={3} />
+        <Field label="Platform" index={4}>
           {data.platform ? (
             <span
               style={{
-                background: "#f0a500",
-                color: "#0e0e0e",
-                fontSize: "11px",
-                fontWeight: 600,
+                display: "inline-block",
+                background: "#C8A882",
+                color: "#FFFFFF",
+                fontSize: "10px",
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 500,
                 padding: "2px 8px",
                 borderRadius: "3px",
-                fontFamily: "'JetBrains Mono', monospace",
+                marginTop: "1px",
               }}
             >
               {data.platform}
             </span>
           ) : (
-            <div style={VALUE_STYLE}>—</div>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#1A1714" }}>—</span>
           )}
-        </div>
+        </Field>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <ActionBtn href={searchUrl}>Find where to watch</ActionBtn>
+        <ActionBtn href={searchUrl} primary>Find where to watch</ActionBtn>
         <ActionBtn href={reminderLink}>Remind me at 8PM</ActionBtn>
       </div>
     </div>

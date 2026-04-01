@@ -37,7 +37,6 @@ export default function UploadZone({ onFile, disabled }: UploadZoneProps) {
 
   return (
     <div
-      className={disabled ? "" : "upload-pulse"}
       onClick={() => !disabled && inputRef.current?.click()}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
@@ -45,16 +44,17 @@ export default function UploadZone({ onFile, disabled }: UploadZoneProps) {
       style={{
         width: "100%",
         minHeight: "200px",
-        border: `2px dashed ${dragging ? "#f0a500" : "#2a2a2a"}`,
-        borderRadius: "8px",
+        border: `1px solid ${dragging ? "#C8A882" : "#D4CEC8"}`,
+        borderRadius: "10px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         cursor: disabled ? "not-allowed" : "pointer",
-        transition: "border-color 150ms",
-        padding: "40px 24px",
+        transition: "border-color 150ms, background 150ms",
+        padding: "48px 24px",
         opacity: disabled ? 0.5 : 1,
+        background: dragging ? "#FDF9F5" : "#FFFFFF",
       }}
     >
       <input
@@ -67,32 +67,28 @@ export default function UploadZone({ onFile, disabled }: UploadZoneProps) {
       />
       <div
         style={{
-          fontSize: "32px",
-          marginBottom: "12px",
-          opacity: 0.4,
+          fontFamily: "'Playfair Display', serif",
+          fontStyle: "italic",
+          fontWeight: 400,
+          fontSize: "18px",
+          color: "#6B6560",
+          textAlign: "center",
+          marginBottom: "10px",
         }}
       >
-        ⬆
+        Drop a screenshot
       </div>
       <div
         style={{
-          fontSize: "15px",
-          color: "#888",
-          fontWeight: 500,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 300,
+          fontSize: "13px",
+          color: "#A39E99",
           textAlign: "center",
+          lineHeight: "1.6",
         }}
       >
-        Drop any screenshot
-      </div>
-      <div
-        style={{
-          fontSize: "12px",
-          color: "#444",
-          marginTop: "6px",
-          textAlign: "center",
-        }}
-      >
-        or click to browse — PNG, JPG, WEBP
+        Client conversations · Restaurants · Movies · Market stats · Content ideas
       </div>
     </div>
   );

@@ -3,25 +3,39 @@
 import { RestaurantData } from "@/lib/types";
 import { buildReminderLink } from "@/lib/gcal";
 
-const LABEL_STYLE = {
-  color: "#666",
-  fontSize: "11px",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.08em",
-  marginBottom: "2px",
-};
-
-const VALUE_STYLE = {
-  fontFamily: "'JetBrains Mono', monospace",
-  color: "#e8e8e8",
-  fontSize: "13px",
-};
-
-function Field({ label, value }: { label: string; value: string }) {
+function Field({ label, value, index }: { label: string; value: string; index: number }) {
   return (
-    <div>
-      <div style={LABEL_STYLE}>{label}</div>
-      <div style={VALUE_STYLE}>{value || "—"}</div>
+    <div
+      className="field-cell"
+      style={{
+        background: "#F5F2EE",
+        padding: "10px",
+        borderRadius: "6px",
+        animationDelay: `${index * 40}ms`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 500,
+          fontSize: "10px",
+          color: "#A39E99",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: "3px",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: "12px",
+          color: "#1A1714",
+        }}
+      >
+        {value || "—"}
+      </div>
     </div>
   );
 }
@@ -29,41 +43,48 @@ function Field({ label, value }: { label: string; value: string }) {
 function ActionBtn({
   href,
   children,
+  primary,
   onClick,
 }: {
   href?: string;
   children: React.ReactNode;
+  primary?: boolean;
   onClick?: () => void;
 }) {
-  const shared = {
-    display: "block",
+  const base = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
     width: "100%",
-    padding: "10px 16px",
-    background: "transparent",
-    border: "1px solid #2a2a2a",
-    borderRadius: "4px",
-    color: "#e8e8e8",
+    height: "44px",
+    padding: "0 16px",
+    borderRadius: "6px",
     fontSize: "13px",
-    textDecoration: "none",
-    textAlign: "left" as const,
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: 500,
     cursor: "pointer",
-    transition: "border-color 150ms",
-    fontFamily: "'Inter', sans-serif",
+    textDecoration: "none",
+    transition: "background 150ms",
+    border: primary ? "none" : "1px solid #D4CEC8",
+    background: primary ? "#1A1714" : "#FFFFFF",
+    color: primary ? "#FFFFFF" : "#1A1714",
   };
 
   if (onClick) {
     return (
       <button
         onClick={onClick}
-        style={shared}
+        className="action-btn"
+        style={base}
         onMouseEnter={(e) =>
-          ((e.currentTarget as HTMLButtonElement).style.borderColor = "#f0a500")
+          ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#2C2825" : "#F5F2EE")
         }
         onMouseLeave={(e) =>
-          ((e.currentTarget as HTMLButtonElement).style.borderColor = "#2a2a2a")
+          ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#1A1714" : "#FFFFFF")
         }
       >
-        {children} →
+        <span>{children}</span>
+        <span>→</span>
       </button>
     );
   }
@@ -73,57 +94,59 @@ function ActionBtn({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      style={shared}
+      className="action-btn"
+      style={base}
       onMouseEnter={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#f0a500")
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#2C2825" : "#F5F2EE")
       }
       onMouseLeave={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#2a2a2a")
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#1A1714" : "#FFFFFF")
       }
     >
-      {children} →
+      <span>{children}</span>
+      <span>→</span>
     </a>
   );
 }
 
 export default function RestaurantCard({ data }: { data: RestaurantData }) {
   const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(data.mapsQuery)}`;
-  const reminderLink = buildReminderLink({
-    title: `Dinner — ${data.name}`,
-    details: `${mapsUrl}`,
-  });
-
+  const reminderLink = buildReminderLink({ title: `Dinner — ${data.name}`, details: mapsUrl });
   const shareText = `${data.name} — ${data.cuisine} ${data.priceRange} | ${mapsUrl}`;
 
-  const handleCopyShare = () => {
-    navigator.clipboard.writeText(shareText);
-  };
+  const fields = [
+    { label: "Name", value: data.name },
+    { label: "Cuisine", value: data.cuisine },
+    { label: "Price", value: data.priceRange },
+    { label: "Rating", value: data.rating },
+    { label: "Hours", value: data.hours },
+    { label: "Location", value: data.location },
+  ];
 
   return (
-    <div className="card-reveal">
+    <div>
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: "12px 24px",
+          gap: "8px",
           marginBottom: "20px",
         }}
       >
-        <Field label="Name" value={data.name} />
-        <Field label="Cuisine" value={data.cuisine} />
-        <Field label="Price" value={data.priceRange} />
-        <Field label="Rating" value={data.rating} />
-        <Field label="Hours" value={data.hours} />
-        <Field label="Location" value={data.location} />
+        {fields.map((f, i) => (
+          <Field key={f.label} label={f.label} value={f.value} index={i} />
+        ))}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <ActionBtn href={mapsUrl}>Open in Google Maps</ActionBtn>
+        <ActionBtn href={mapsUrl} primary>Open in Google Maps</ActionBtn>
         {data.reservationUrl && (
           <ActionBtn href={data.reservationUrl}>Reserve a table</ActionBtn>
         )}
         <ActionBtn href={reminderLink}>Remind me at 8PM</ActionBtn>
-        <ActionBtn onClick={handleCopyShare}>Copy share text</ActionBtn>
+        <ActionBtn onClick={() => navigator.clipboard.writeText(shareText)}>
+          Copy share text
+        </ActionBtn>
       </div>
     </div>
   );

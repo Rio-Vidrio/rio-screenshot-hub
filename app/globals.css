@@ -1,16 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @import "tailwindcss";
 
 :root {
-  --bg: #0e0e0e;
-  --surface: #161616;
-  --border: #2a2a2a;
-  --amber: #f0a500;
-  --muted: #666666;
-  --text: #e8e8e8;
-  --error-bg: #2a0a0a;
-  --error-border: #5a1a1a;
+  --bg: #FAFAF9;
+  --surface: #FFFFFF;
+  --surface-secondary: #F5F2EE;
+  --border: #E8E4DF;
+  --border-strong: #D4CEC8;
+  --accent: #C8A882;
+  --accent-dark: #8C6E50;
+  --text-primary: #1A1714;
+  --text-secondary: #6B6560;
+  --text-tertiary: #A39E99;
+  --success: #4A7C59;
+  --danger: #B85450;
 }
 
 * {
@@ -20,43 +24,41 @@
 html,
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
   margin: 0;
   padding: 0;
   min-height: 100vh;
 }
 
-/* Upload zone pulse */
-@keyframes pulse-border {
-  0%, 100% { border-color: #2a2a2a; opacity: 1; }
-  50% { border-color: #f0a500; opacity: 0.5; }
-}
-
-.upload-pulse {
-  animation: pulse-border 2.5s ease-in-out infinite;
-}
-
-/* Card fade-in */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+/* Card slide-up entrance */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .card-reveal {
-  animation: fadeIn 150ms ease-out forwards;
+  animation: slideUp 300ms ease-out forwards;
 }
 
-/* Session item border flash */
-@keyframes borderFlash {
-  0% { border-left-color: #f0a500; }
-  100% { border-left-color: transparent; }
+/* Info field cell stagger */
+@keyframes fieldFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.session-flash {
-  border-left-width: 2px;
-  border-left-style: solid;
-  animation: borderFlash 1.2s ease-out forwards;
+.field-cell {
+  animation: fieldFadeIn 200ms ease forwards;
+}
+
+/* Session item slide in from right */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.session-new {
+  animation: slideInRight 250ms ease forwards;
 }
 
 /* Progress bar fill */
@@ -69,14 +71,29 @@ body {
   animation: progressFill 3s ease-in-out forwards;
 }
 
+/* Modal entrance */
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-card {
+  animation: modalIn 200ms ease-out forwards;
+}
+
+/* Action button active state */
+.action-btn:active {
+  transform: scale(0.98);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #0e0e0e;
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: var(--border-strong);
   border-radius: 2px;
 }

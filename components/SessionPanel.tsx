@@ -3,12 +3,12 @@
 import { SessionItem, AnalysisResult } from "@/lib/types";
 
 const TYPE_COLORS: Record<string, string> = {
-  CLIENT_CONVO: "#f0a500",
-  RESTAURANT: "#22c55e",
-  MOVIE: "#eab308",
-  SOCIAL_CONTENT: "#9ca3af",
-  MARKET_STATS: "#ef4444",
-  NOTE: "#d1d5db",
+  CLIENT_CONVO: "#C8A882",
+  RESTAURANT: "#4A7C59",
+  MOVIE: "#8C6E50",
+  SOCIAL_CONTENT: "#A39E99",
+  MARKET_STATS: "#B85450",
+  NOTE: "#D4CEC8",
 };
 
 function getItemName(result: AnalysisResult): string {
@@ -52,9 +52,9 @@ export default function SessionPanel({
   return (
     <div
       style={{
-        background: "#161616",
-        border: "1px solid #2a2a2a",
-        borderRadius: "8px",
+        background: "#FFFFFF",
+        border: "1px solid #E8E4DF",
+        borderRadius: "10px",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
@@ -64,8 +64,8 @@ export default function SessionPanel({
       {/* Header */}
       <div
         style={{
-          padding: "14px 16px",
-          borderBottom: "1px solid #1f1f1f",
+          padding: "16px 18px",
+          borderBottom: "1px solid #F0ECE8",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -73,11 +73,12 @@ export default function SessionPanel({
       >
         <span
           style={{
-            fontSize: "11px",
-            color: "#555",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
+            fontFamily: "'DM Sans', sans-serif",
             fontWeight: 500,
+            fontSize: "10px",
+            color: "#A39E99",
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
           }}
         >
           History
@@ -88,18 +89,19 @@ export default function SessionPanel({
             style={{
               background: "transparent",
               border: "none",
-              color: "#444",
-              fontSize: "11px",
+              color: "#A39E99",
+              fontSize: "12px",
+              fontFamily: "'DM Sans', sans-serif",
               cursor: "pointer",
               padding: "2px 6px",
               borderRadius: "3px",
               transition: "color 150ms",
             }}
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.color = "#ef4444")
+              ((e.currentTarget as HTMLButtonElement).style.color = "#B85450")
             }
             onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.color = "#444")
+              ((e.currentTarget as HTMLButtonElement).style.color = "#A39E99")
             }
           >
             Clear all
@@ -112,56 +114,59 @@ export default function SessionPanel({
         {items.length === 0 ? (
           <div
             style={{
-              padding: "24px 16px",
+              padding: "28px 18px",
               textAlign: "center",
-              color: "#333",
-              fontSize: "12px",
+              color: "#A39E99",
+              fontSize: "13px",
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 300,
             }}
           >
             No screenshots yet
           </div>
         ) : (
-          [...items].reverse().map((item) => (
+          [...items].reverse().map((item, index) => (
             <button
               key={item.id}
               onClick={() => onSelect(item)}
-              className={item.id === items[items.length - 1]?.id ? "session-flash" : ""}
+              className={index === 0 ? "session-new" : ""}
               style={{
                 display: "block",
                 width: "100%",
-                padding: "12px 16px",
-                background:
-                  activeId === item.id ? "#1e1e1e" : "transparent",
+                padding: "13px 18px",
+                background: activeId === item.id ? "#F5F2EE" : "transparent",
                 border: "none",
-                borderBottom: "1px solid #1a1a1a",
-                borderLeft: activeId === item.id ? "2px solid #f0a500" : "2px solid transparent",
+                borderBottom: "1px solid #F5F2EE",
+                borderLeft: activeId === item.id ? "2px solid #C8A882" : "2px solid transparent",
                 textAlign: "left",
                 cursor: "pointer",
-                transition: "background 100ms",
+                transition: "background 200ms",
               }}
               onMouseEnter={(e) => {
                 if (activeId !== item.id)
-                  (e.currentTarget as HTMLButtonElement).style.background = "#1a1a1a";
+                  (e.currentTarget as HTMLButtonElement).style.background = "#F5F2EE";
               }}
               onMouseLeave={(e) => {
                 if (activeId !== item.id)
                   (e.currentTarget as HTMLButtonElement).style.background = "transparent";
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "9px", marginBottom: "4px" }}>
                 <span
                   style={{
-                    width: "7px",
-                    height: "7px",
-                    borderRadius: "50%",
-                    background: TYPE_COLORS[item.result.type] || "#666",
+                    width: "6px",
+                    height: "6px",
+                    borderRadius: "2px",
+                    background: TYPE_COLORS[item.result.type] || "#A39E99",
                     flexShrink: 0,
                   }}
                 />
                 <span
                   style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 400,
                     fontSize: "13px",
-                    color: "#d1d5db",
+                    color: "#1A1714",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -171,7 +176,15 @@ export default function SessionPanel({
                   {getItemName(item.result)}
                 </span>
               </div>
-              <div style={{ fontSize: "11px", color: "#444", paddingLeft: "15px" }}>
+              <div
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 300,
+                  fontSize: "11px",
+                  color: "#A39E99",
+                  paddingLeft: "15px",
+                }}
+              >
                 {relativeTime(item.timestamp)}
               </div>
             </button>

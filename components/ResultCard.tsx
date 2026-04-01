@@ -36,7 +36,6 @@ function getTitle(result: AnalysisResult): string {
 
 interface ResultCardProps {
   result: AnalysisResult;
-  onRetry?: () => void;
 }
 
 export default function ResultCard({ result }: ResultCardProps) {
@@ -45,53 +44,50 @@ export default function ResultCard({ result }: ResultCardProps) {
 
   return (
     <div
+      className="card-reveal"
       style={{
-        background: "#161616",
-        border: "1px solid #2a2a2a",
-        borderRadius: "8px",
+        background: "#FFFFFF",
+        border: "1px solid #E8E4DF",
+        borderLeft: "3px solid #C8A882",
+        borderRadius: "10px",
         overflow: "hidden",
       }}
     >
       {/* Header */}
       <div
         style={{
-          padding: "16px 20px",
-          borderBottom: "1px solid #1f1f1f",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "12px",
+          padding: "22px 28px 18px",
+          borderBottom: "1px solid #F0ECE8",
         }}
       >
-        <span
+        <div
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: "10px",
+            fontFamily: "'DM Sans', sans-serif",
             fontWeight: 500,
-            color: "#0e0e0e",
-            background: "#f0a500",
-            padding: "3px 7px",
-            borderRadius: "3px",
-            letterSpacing: "0.1em",
-            flexShrink: 0,
-            marginTop: "2px",
+            fontSize: "10px",
+            color: "#C8A882",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            marginBottom: "8px",
           }}
         >
           {typeLabel}
-        </span>
-        <span
+        </div>
+        <div
           style={{
-            fontSize: "14px",
-            fontWeight: 500,
-            color: "#e8e8e8",
-            lineHeight: "1.4",
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: 400,
+            fontSize: "18px",
+            color: "#1A1714",
+            lineHeight: "1.35",
           }}
         >
           {title}
-        </span>
+        </div>
       </div>
 
       {/* Body */}
-      <div style={{ padding: "20px" }}>
+      <div style={{ padding: "28px" }}>
         {result.type === "CLIENT_CONVO" && <ClientCard data={result} />}
         {result.type === "RESTAURANT" && <RestaurantCard data={result} />}
         {result.type === "MOVIE" && <MovieCard data={result} />}

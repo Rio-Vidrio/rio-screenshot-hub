@@ -17,11 +17,18 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full antialiased" style={{ background: "#0e0e0e", color: "#e8e8e8", fontFamily: "'Inter', sans-serif" }}>
+      <body
+        className="min-h-full antialiased"
+        style={{
+          background: "#FAFAF9",
+          color: "#1A1714",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
         {children}
       </body>
     </html>

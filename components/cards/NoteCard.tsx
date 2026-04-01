@@ -6,41 +6,48 @@ import { buildTaskLink } from "@/lib/gcal";
 function ActionBtn({
   href,
   children,
+  primary,
   onClick,
 }: {
   href?: string;
   children: React.ReactNode;
+  primary?: boolean;
   onClick?: () => void;
 }) {
-  const shared = {
-    display: "block",
+  const base = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
     width: "100%",
-    padding: "10px 16px",
-    background: "transparent",
-    border: "1px solid #2a2a2a",
-    borderRadius: "4px",
-    color: "#e8e8e8",
+    height: "44px",
+    padding: "0 16px",
+    borderRadius: "6px",
     fontSize: "13px",
-    textDecoration: "none",
-    textAlign: "left" as const,
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: 500,
     cursor: "pointer",
-    transition: "border-color 150ms",
-    fontFamily: "'Inter', sans-serif",
+    textDecoration: "none",
+    transition: "background 150ms",
+    border: primary ? "none" : "1px solid #D4CEC8",
+    background: primary ? "#1A1714" : "#FFFFFF",
+    color: primary ? "#FFFFFF" : "#1A1714",
   };
 
   if (onClick) {
     return (
       <button
         onClick={onClick}
-        style={shared}
+        className="action-btn"
+        style={base}
         onMouseEnter={(e) =>
-          ((e.currentTarget as HTMLButtonElement).style.borderColor = "#f0a500")
+          ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#2C2825" : "#F5F2EE")
         }
         onMouseLeave={(e) =>
-          ((e.currentTarget as HTMLButtonElement).style.borderColor = "#2a2a2a")
+          ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#1A1714" : "#FFFFFF")
         }
       >
-        {children} →
+        <span>{children}</span>
+        <span>→</span>
       </button>
     );
   }
@@ -50,15 +57,17 @@ function ActionBtn({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      style={shared}
+      className="action-btn"
+      style={base}
       onMouseEnter={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#f0a500")
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#2C2825" : "#F5F2EE")
       }
       onMouseLeave={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#2a2a2a")
+        ((e.currentTarget as HTMLAnchorElement).style.background = primary ? "#1A1714" : "#FFFFFF")
       }
     >
-      {children} →
+      <span>{children}</span>
+      <span>→</span>
     </a>
   );
 }
@@ -67,25 +76,27 @@ export default function NoteCard({ data }: { data: NoteData }) {
   const taskLink = buildTaskLink({ title: data.title, details: data.content });
 
   return (
-    <div className="card-reveal">
-      {/* Category + actionable */}
+    <div>
+      {/* Tags */}
       <div
         style={{
           display: "flex",
           gap: "8px",
           alignItems: "center",
           marginBottom: "16px",
+          flexWrap: "wrap",
         }}
       >
         <span
           style={{
-            background: "#222",
-            border: "1px solid #333",
-            color: "#aaa",
+            background: "#F5F2EE",
+            border: "1px solid #E8E4DF",
+            color: "#6B6560",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 500,
             fontSize: "11px",
-            padding: "3px 8px",
-            borderRadius: "3px",
-            fontFamily: "'JetBrains Mono', monospace",
+            padding: "3px 10px",
+            borderRadius: "4px",
           }}
         >
           {data.category}
@@ -93,16 +104,17 @@ export default function NoteCard({ data }: { data: NoteData }) {
         {data.actionable && (
           <span
             style={{
-              background: "#1a2a0a",
-              border: "1px solid #2a4a0a",
-              color: "#6aba2a",
+              background: "#EDF5F0",
+              border: "1px solid #C8DDD1",
+              color: "#4A7C59",
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 500,
               fontSize: "11px",
-              padding: "3px 8px",
-              borderRadius: "3px",
-              fontFamily: "'JetBrains Mono', monospace",
+              padding: "3px 10px",
+              borderRadius: "4px",
             }}
           >
-            ACTIONABLE
+            Actionable
           </span>
         )}
       </div>
@@ -110,14 +122,15 @@ export default function NoteCard({ data }: { data: NoteData }) {
       {/* Content */}
       <div
         style={{
-          background: "#1a1a1a",
-          border: "1px solid #2a2a2a",
+          background: "#F5F2EE",
           borderRadius: "6px",
           padding: "14px",
-          fontSize: "13px",
-          color: "#ccc",
-          lineHeight: "1.7",
           marginBottom: "20px",
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 300,
+          fontSize: "13px",
+          color: "#1A1714",
+          lineHeight: "1.7",
           whiteSpace: "pre-wrap",
         }}
       >
@@ -125,7 +138,7 @@ export default function NoteCard({ data }: { data: NoteData }) {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <ActionBtn onClick={() => navigator.clipboard.writeText(data.content)}>
+        <ActionBtn onClick={() => navigator.clipboard.writeText(data.content)} primary>
           Copy note
         </ActionBtn>
         {data.actionable && (

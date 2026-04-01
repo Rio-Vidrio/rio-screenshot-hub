@@ -2,107 +2,135 @@
 
 import { SocialContentData } from "@/lib/types";
 
-const LABEL_STYLE = {
-  color: "#666",
-  fontSize: "11px",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.08em",
-  marginBottom: "2px",
-};
-
-const VALUE_STYLE = {
-  fontFamily: "'JetBrains Mono', monospace",
-  color: "#e8e8e8",
-  fontSize: "13px",
-};
-
-function Field({ label, value }: { label: string; value: string }) {
+function Field({ label, value, index }: { label: string; value: string; index: number }) {
   return (
-    <div>
-      <div style={LABEL_STYLE}>{label}</div>
-      <div style={VALUE_STYLE}>{value || "—"}</div>
+    <div
+      className="field-cell"
+      style={{
+        background: "#F5F2EE",
+        padding: "10px",
+        borderRadius: "6px",
+        animationDelay: `${index * 40}ms`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 500,
+          fontSize: "10px",
+          color: "#A39E99",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: "3px",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 400,
+          fontSize: "12px",
+          color: "#1A1714",
+        }}
+      >
+        {value || "—"}
+      </div>
     </div>
   );
 }
 
-function CopyBtn({ text, label }: { text: string; label: string }) {
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text);
-  };
-
+function CopyBtn({ text, label, primary }: { text: string; label: string; primary?: boolean }) {
   return (
     <button
-      onClick={handleCopy}
+      onClick={() => navigator.clipboard.writeText(text)}
+      className="action-btn"
       style={{
-        display: "block",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
         width: "100%",
-        padding: "10px 16px",
-        background: "transparent",
-        border: "1px solid #2a2a2a",
-        borderRadius: "4px",
-        color: "#e8e8e8",
+        height: "44px",
+        padding: "0 16px",
+        borderRadius: "6px",
         fontSize: "13px",
-        textAlign: "left",
+        fontFamily: "'DM Sans', sans-serif",
+        fontWeight: 500,
         cursor: "pointer",
-        transition: "border-color 150ms",
-        fontFamily: "'Inter', sans-serif",
+        transition: "background 150ms",
+        border: primary ? "none" : "1px solid #D4CEC8",
+        background: primary ? "#1A1714" : "#FFFFFF",
+        color: primary ? "#FFFFFF" : "#1A1714",
       }}
       onMouseEnter={(e) =>
-        ((e.currentTarget as HTMLButtonElement).style.borderColor = "#f0a500")
+        ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#2C2825" : "#F5F2EE")
       }
       onMouseLeave={(e) =>
-        ((e.currentTarget as HTMLButtonElement).style.borderColor = "#2a2a2a")
+        ((e.currentTarget as HTMLButtonElement).style.background = primary ? "#1A1714" : "#FFFFFF")
       }
     >
-      {label} →
+      <span>{label}</span>
+      <span>→</span>
     </button>
   );
 }
 
 export default function ContentCard({ data }: { data: SocialContentData }) {
   return (
-    <div className="card-reveal">
+    <div>
       {/* Hook highlight */}
       <div
         style={{
-          borderLeft: "3px solid #f0a500",
+          borderLeft: "3px solid #C8A882",
           paddingLeft: "14px",
           marginBottom: "20px",
-          fontSize: "14px",
-          color: "#e8e8e8",
-          lineHeight: "1.5",
+          fontFamily: "'Playfair Display', serif",
           fontStyle: "italic",
+          fontSize: "14px",
+          color: "#1A1714",
+          lineHeight: "1.5",
         }}
       >
         {data.hook}
       </div>
 
-      {/* Fields */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: "12px 24px",
+          gap: "8px",
           marginBottom: "16px",
         }}
       >
-        <Field label="Platform" value={data.platform} />
-        <Field label="Content Type" value={data.contentType} />
-        <Field label="Angle" value={data.angle} />
+        <Field label="Platform" value={data.platform} index={0} />
+        <Field label="Content Type" value={data.contentType} index={1} />
+        <Field label="Angle" value={data.angle} index={2} />
       </div>
 
       {/* Caption */}
       <div style={{ marginBottom: "16px" }}>
-        <div style={LABEL_STYLE}>Suggested Caption</div>
         <div
           style={{
-            background: "#1a1a1a",
-            border: "1px solid #2a2a2a",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 500,
+            fontSize: "10px",
+            color: "#A39E99",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            marginBottom: "8px",
+          }}
+        >
+          Suggested Caption
+        </div>
+        <div
+          style={{
+            background: "#F5F2EE",
             borderRadius: "6px",
-            padding: "12px 14px",
-            marginTop: "6px",
+            padding: "14px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 300,
             fontSize: "13px",
-            color: "#ccc",
+            color: "#1A1714",
             lineHeight: "1.7",
           }}
         >
@@ -112,13 +140,25 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
 
       {/* Hashtags */}
       <div style={{ marginBottom: "20px" }}>
-        <div style={LABEL_STYLE}>Hashtags</div>
+        <div
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 500,
+            fontSize: "10px",
+            color: "#A39E99",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            marginBottom: "6px",
+          }}
+        >
+          Hashtags
+        </div>
         <div
           style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: "12px",
-            color: "#888",
-            marginTop: "4px",
+            color: "#6B6560",
+            lineHeight: "1.6",
           }}
         >
           {data.hashtags}
@@ -126,11 +166,8 @@ export default function ContentCard({ data }: { data: SocialContentData }) {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <CopyBtn text={data.suggestedCaption} label="Copy caption" />
-        <CopyBtn
-          text={`${data.hook}\n\n${data.hashtags}`}
-          label="Copy hook + hashtags"
-        />
+        <CopyBtn text={data.suggestedCaption} label="Copy caption" primary />
+        <CopyBtn text={`${data.hook}\n\n${data.hashtags}`} label="Copy hook + hashtags" />
       </div>
     </div>
   );

@@ -3,8 +3,18 @@
  * All times are local — no timezone conversion, Rio is in Phoenix (MST, no DST).
  */
 
+function getCalendarEmail(): string {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem("calendarEmail") || "";
+}
+
+function appendAuthUser(url: string): string {
+  const email = getCalendarEmail();
+  if (!email) return url;
+  return `${url}&authuser=${encodeURIComponent(email)}`;
+}
+
 function toGCalDate(dateStr: string, timeStr: string): string {
-  // dateStr: YYYY-MM-DD, timeStr: HH:MM
   const [year, month, day] = dateStr.split("-");
   const [hour, minute] = timeStr.split(":");
   return `${year}${month}${day}T${hour}${minute}00`;
@@ -34,7 +44,7 @@ export function buildCalendarEventLink({
     details,
     location,
   });
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  return appendAuthUser(`https://calendar.google.com/calendar/render?${params.toString()}`);
 }
 
 export function buildReminderLink({
@@ -44,7 +54,6 @@ export function buildReminderLink({
   title: string;
   details?: string;
 }): string {
-  // Remind at 8PM today
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
@@ -57,7 +66,7 @@ export function buildReminderLink({
     dates: `${start}/${end}`,
     details,
   });
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  return appendAuthUser(`https://calendar.google.com/calendar/render?${params.toString()}`);
 }
 
 export function buildTaskLink({ title, details = "" }: { title: string; details?: string }): string {

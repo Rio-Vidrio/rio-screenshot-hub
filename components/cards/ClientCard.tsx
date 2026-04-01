@@ -4,31 +4,39 @@ import { ClientConvoData } from "@/lib/types";
 import { buildCalendarEventLink } from "@/lib/gcal";
 import { useState } from "react";
 
-const FIELD_STYLE = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "12px 24px",
-};
-
-const LABEL_STYLE = {
-  color: "#666",
-  fontSize: "11px",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.08em",
-  marginBottom: "2px",
-};
-
-const VALUE_STYLE = {
-  fontFamily: "'JetBrains Mono', monospace",
-  color: "#e8e8e8",
-  fontSize: "13px",
-};
-
-function Field({ label, value }: { label: string; value: string }) {
+function Field({ label, value, index }: { label: string; value: string; index: number }) {
   return (
-    <div>
-      <div style={LABEL_STYLE}>{label}</div>
-      <div style={VALUE_STYLE}>{value || "—"}</div>
+    <div
+      className="field-cell"
+      style={{
+        background: "#F5F2EE",
+        padding: "10px",
+        borderRadius: "6px",
+        animationDelay: `${index * 40}ms`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 500,
+          fontSize: "10px",
+          color: "#A39E99",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: "3px",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: "12px",
+          color: "#1A1714",
+        }}
+      >
+        {value || "—"}
+      </div>
     </div>
   );
 }
@@ -36,37 +44,47 @@ function Field({ label, value }: { label: string; value: string }) {
 function ActionBtn({
   href,
   children,
+  primary,
 }: {
-  href: string;
+  href?: string;
   children: React.ReactNode;
+  primary?: boolean;
 }) {
+  const base = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    height: "44px",
+    padding: "0 16px",
+    borderRadius: "6px",
+    fontSize: "13px",
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: 500,
+    cursor: "pointer",
+    textDecoration: "none",
+    transition: "background 150ms",
+    border: primary ? "none" : "1px solid #D4CEC8",
+    background: primary ? "#1A1714" : "#FFFFFF",
+    color: primary ? "#FFFFFF" : "#1A1714",
+  };
+
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      style={{
-        display: "block",
-        width: "100%",
-        padding: "10px 16px",
-        background: "transparent",
-        border: "1px solid #2a2a2a",
-        borderRadius: "4px",
-        color: "#e8e8e8",
-        fontSize: "13px",
-        textDecoration: "none",
-        textAlign: "left",
-        cursor: "pointer",
-        transition: "border-color 150ms",
+      className="action-btn"
+      style={base}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLAnchorElement).style.background = primary ? "#2C2825" : "#F5F2EE";
       }}
-      onMouseEnter={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#f0a500")
-      }
-      onMouseLeave={(e) =>
-        ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#2a2a2a")
-      }
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLAnchorElement).style.background = primary ? "#1A1714" : "#FFFFFF";
+      }}
     >
-      {children} →
+      <span>{children}</span>
+      <span>→</span>
     </a>
   );
 }
@@ -74,48 +92,57 @@ function ActionBtn({
 export default function ClientCard({ data }: { data: ClientConvoData }) {
   const [notifyClient, setNotifyClient] = useState(false);
 
-  const eventTitle = `${data.meetingType} — ${data.clientName}`;
   const calLink = buildCalendarEventLink({
-    title: eventTitle,
+    title: `${data.meetingType} — ${data.clientName}`,
     date: data.date,
     startTime: data.startTime,
     endTime: data.endTime,
     details: data.notes,
   });
 
-  const smsLink = data.phone
-    ? `sms:${data.phone.replace(/\D/g, "")}`
-    : null;
+  const smsLink = data.phone ? `sms:${data.phone.replace(/\D/g, "")}` : null;
   const emailLink = data.email ? `mailto:${data.email}` : null;
 
+  const fields = [
+    { label: "Client", value: data.clientName },
+    { label: "Meeting Type", value: data.meetingType },
+    { label: "Date", value: data.date },
+    { label: "Time", value: `${data.startTime} – ${data.endTime}` },
+    { label: "Phone", value: data.phone },
+    { label: "Email", value: data.email },
+  ];
+
   return (
-    <div className="card-reveal">
-      {/* Notes */}
+    <div>
       {data.notes && (
         <div
           style={{
-            background: "#1a1a1a",
-            border: "1px solid #2a2a2a",
+            background: "#F5F2EE",
             borderRadius: "6px",
-            padding: "12px 14px",
+            padding: "14px",
             marginBottom: "20px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 300,
             fontSize: "13px",
-            color: "#aaa",
-            lineHeight: "1.6",
+            color: "#6B6560",
+            lineHeight: "1.7",
           }}
         >
           {data.notes}
         </div>
       )}
 
-      {/* Fields */}
-      <div style={FIELD_STYLE}>
-        <Field label="Client" value={data.clientName} />
-        <Field label="Meeting Type" value={data.meetingType} />
-        <Field label="Date" value={data.date} />
-        <Field label="Time" value={`${data.startTime} – ${data.endTime}`} />
-        <Field label="Phone" value={data.phone} />
-        <Field label="Email" value={data.email} />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "8px",
+          marginBottom: "20px",
+        }}
+      >
+        {fields.map((f, i) => (
+          <Field key={f.label} label={f.label} value={f.value} index={i} />
+        ))}
       </div>
 
       {/* Notify toggle */}
@@ -124,7 +151,6 @@ export default function ClientCard({ data }: { data: ClientConvoData }) {
           display: "flex",
           alignItems: "center",
           gap: "10px",
-          marginTop: "20px",
           marginBottom: "16px",
         }}
       >
@@ -134,11 +160,12 @@ export default function ClientCard({ data }: { data: ClientConvoData }) {
             width: "36px",
             height: "20px",
             borderRadius: "10px",
-            background: notifyClient ? "#f0a500" : "#2a2a2a",
+            background: notifyClient ? "#C8A882" : "#E8E4DF",
             border: "none",
             cursor: "pointer",
             position: "relative",
             transition: "background 150ms",
+            flexShrink: 0,
           }}
         >
           <span
@@ -149,17 +176,26 @@ export default function ClientCard({ data }: { data: ClientConvoData }) {
               width: "16px",
               height: "16px",
               borderRadius: "50%",
-              background: "#e8e8e8",
+              background: "#FFFFFF",
               transition: "left 150ms",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
             }}
           />
         </button>
-        <span style={{ fontSize: "12px", color: "#666" }}>Notify client</span>
+        <span
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 400,
+            fontSize: "12px",
+            color: "#6B6560",
+          }}
+        >
+          Notify client
+        </span>
       </div>
 
-      {/* Actions */}
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <ActionBtn href={calLink}>Add to Google Calendar</ActionBtn>
+        <ActionBtn href={calLink} primary>Add to Google Calendar</ActionBtn>
         {smsLink && <ActionBtn href={smsLink}>Send SMS to {data.phone}</ActionBtn>}
         {emailLink && <ActionBtn href={emailLink}>Email {data.email}</ActionBtn>}
       </div>
