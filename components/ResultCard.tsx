@@ -7,30 +7,42 @@ import MovieCard from "./cards/MovieCard";
 import ContentCard from "./cards/ContentCard";
 import MarketCard from "./cards/MarketCard";
 import NoteCard from "./cards/NoteCard";
+import PropertyListingCard from "./cards/PropertyListingCard";
+import NewLeadCard from "./cards/NewLeadCard";
+import ContractDeadlineCard from "./cards/ContractDeadlineCard";
+import FlightTravelCard from "./cards/FlightTravelCard";
+import ReceiptExpenseCard from "./cards/ReceiptExpenseCard";
+import KidsScheduleCard from "./cards/KidsScheduleCard";
 
 const TYPE_LABELS: Record<string, string> = {
-  CLIENT_CONVO: "CLIENT",
-  RESTAURANT: "RESTAURANT",
-  MOVIE: "MOVIE",
-  SOCIAL_CONTENT: "CONTENT",
-  MARKET_STATS: "MARKET",
-  NOTE: "NOTE",
+  CLIENT_CONVO:       "CLIENT",
+  RESTAURANT:         "RESTAURANT",
+  MOVIE:              "MOVIE",
+  SOCIAL_CONTENT:     "CONTENT",
+  MARKET_STATS:       "MARKET",
+  NOTE:               "NOTE",
+  PROPERTY_LISTING:   "LISTING",
+  NEW_LEAD:           "NEW LEAD",
+  CONTRACT_DEADLINE:  "CONTRACT",
+  FLIGHT_TRAVEL:      "TRAVEL",
+  RECEIPT_EXPENSE:    "EXPENSE",
+  KIDS_SCHEDULE:      "KIDS",
 };
 
 function getTitle(result: AnalysisResult): string {
   switch (result.type) {
-    case "CLIENT_CONVO":
-      return result.clientName || "Client Conversation";
-    case "RESTAURANT":
-      return result.name;
-    case "MOVIE":
-      return result.title;
-    case "SOCIAL_CONTENT":
-      return result.hook.slice(0, 60) + (result.hook.length > 60 ? "…" : "");
-    case "MARKET_STATS":
-      return result.headline.slice(0, 60) + (result.headline.length > 60 ? "…" : "");
-    case "NOTE":
-      return result.title;
+    case "CLIENT_CONVO":        return result.clientName || "Client Conversation";
+    case "RESTAURANT":          return result.name;
+    case "MOVIE":               return result.title;
+    case "SOCIAL_CONTENT":      return result.hook.slice(0, 60) + (result.hook.length > 60 ? "…" : "");
+    case "MARKET_STATS":        return result.headline.slice(0, 60) + (result.headline.length > 60 ? "…" : "");
+    case "NOTE":                return result.title;
+    case "PROPERTY_LISTING":    return result.address;
+    case "NEW_LEAD":            return result.name || "New Lead";
+    case "CONTRACT_DEADLINE":   return result.propertyAddress;
+    case "FLIGHT_TRAVEL":       return result.tripName;
+    case "RECEIPT_EXPENSE":     return result.merchant;
+    case "KIDS_SCHEDULE":       return `${result.childName} — schedule`;
   }
 }
 
@@ -89,12 +101,18 @@ export default function ResultCard({ result, onOpenCalendarSetup }: ResultCardPr
 
       {/* Body */}
       <div style={{ padding: "24px 28px" }}>
-        {result.type === "CLIENT_CONVO" && <ClientCard data={result} onOpenCalendarSetup={onOpenCalendarSetup} />}
-        {result.type === "RESTAURANT" && <RestaurantCard data={result} />}
-        {result.type === "MOVIE" && <MovieCard data={result} />}
-        {result.type === "SOCIAL_CONTENT" && <ContentCard data={result} />}
-        {result.type === "MARKET_STATS" && <MarketCard data={result} />}
-        {result.type === "NOTE" && <NoteCard data={result} />}
+        {result.type === "CLIENT_CONVO"       && <ClientCard data={result} onOpenCalendarSetup={onOpenCalendarSetup} />}
+        {result.type === "RESTAURANT"         && <RestaurantCard data={result} />}
+        {result.type === "MOVIE"              && <MovieCard data={result} />}
+        {result.type === "SOCIAL_CONTENT"     && <ContentCard data={result} />}
+        {result.type === "MARKET_STATS"       && <MarketCard data={result} />}
+        {result.type === "NOTE"               && <NoteCard data={result} />}
+        {result.type === "PROPERTY_LISTING"   && <PropertyListingCard data={result} />}
+        {result.type === "NEW_LEAD"           && <NewLeadCard data={result} onOpenCalendarSetup={onOpenCalendarSetup} />}
+        {result.type === "CONTRACT_DEADLINE"  && <ContractDeadlineCard data={result} />}
+        {result.type === "FLIGHT_TRAVEL"      && <FlightTravelCard data={result} />}
+        {result.type === "RECEIPT_EXPENSE"    && <ReceiptExpenseCard data={result} />}
+        {result.type === "KIDS_SCHEDULE"      && <KidsScheduleCard data={result} />}
       </div>
     </div>
   );

@@ -3,28 +3,34 @@
 import { SessionItem, AnalysisResult } from "@/lib/types";
 
 const TYPE_COLORS: Record<string, string> = {
-  CLIENT_CONVO: "#C8A882",
-  RESTAURANT: "#4A7C59",
-  MOVIE: "#8C6E50",
-  SOCIAL_CONTENT: "#A39E99",
-  MARKET_STATS: "#B85450",
-  NOTE: "#D4CEC8",
+  CLIENT_CONVO:       "#C8A882",
+  RESTAURANT:         "#4A7C59",
+  MOVIE:              "#8C6E50",
+  SOCIAL_CONTENT:     "#A39E99",
+  MARKET_STATS:       "#B85450",
+  NOTE:               "#D4CEC8",
+  PROPERTY_LISTING:   "#378ADD",
+  NEW_LEAD:           "#C8A882",
+  CONTRACT_DEADLINE:  "#B85450",
+  FLIGHT_TRAVEL:      "#4A7C59",
+  RECEIPT_EXPENSE:    "#8C6E50",
+  KIDS_SCHEDULE:      "#9B8AC4",
 };
 
 function getItemName(result: AnalysisResult): string {
   switch (result.type) {
-    case "CLIENT_CONVO":
-      return result.clientName || "Client";
-    case "RESTAURANT":
-      return result.name;
-    case "MOVIE":
-      return result.title;
-    case "SOCIAL_CONTENT":
-      return result.platform + " — " + result.contentType;
-    case "MARKET_STATS":
-      return result.headline.slice(0, 40) + (result.headline.length > 40 ? "…" : "");
-    case "NOTE":
-      return result.title;
+    case "CLIENT_CONVO":        return result.clientName || "Client";
+    case "RESTAURANT":          return result.name;
+    case "MOVIE":               return result.title;
+    case "SOCIAL_CONTENT":      return result.platform + " — " + result.contentType;
+    case "MARKET_STATS":        return result.headline.slice(0, 40) + (result.headline.length > 40 ? "…" : "");
+    case "NOTE":                return result.title;
+    case "PROPERTY_LISTING":    return result.address;
+    case "NEW_LEAD":            return result.name || "New Lead";
+    case "CONTRACT_DEADLINE":   return result.propertyAddress;
+    case "FLIGHT_TRAVEL":       return result.tripName;
+    case "RECEIPT_EXPENSE":     return `${result.merchant} · ${result.amount}`;
+    case "KIDS_SCHEDULE":       return `${result.childName} · ${result.events.length} event${result.events.length !== 1 ? "s" : ""}`;
   }
 }
 

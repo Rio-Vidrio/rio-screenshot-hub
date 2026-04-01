@@ -4,7 +4,13 @@ export type DetectionType =
   | "MOVIE"
   | "SOCIAL_CONTENT"
   | "MARKET_STATS"
-  | "NOTE";
+  | "NOTE"
+  | "PROPERTY_LISTING"
+  | "NEW_LEAD"
+  | "CONTRACT_DEADLINE"
+  | "FLIGHT_TRAVEL"
+  | "RECEIPT_EXPENSE"
+  | "KIDS_SCHEDULE";
 
 export interface ClientConvoData {
   type: "CLIENT_CONVO";
@@ -66,13 +72,92 @@ export interface NoteData {
   actionable: boolean;
 }
 
+export interface PropertyListing {
+  type: "PROPERTY_LISTING";
+  address: string;
+  price: string;
+  beds: string;
+  baths: string;
+  sqft: string;
+  daysOnMarket: string;
+  mlsNumber: string;
+  description: string;
+  source: string;
+  notes: string;
+  socialCaption: string;
+}
+
+export interface NewLead {
+  type: "NEW_LEAD";
+  name: string;
+  phone: string;
+  email: string;
+  intent: "Buyer" | "Seller" | "Both" | "Unknown";
+  timeline: string;
+  priceRange: string;
+  notes: string;
+  followUpTemplate: string;
+}
+
+export interface ContractDeadline {
+  type: "CONTRACT_DEADLINE";
+  propertyAddress: string;
+  deadlines: Array<{
+    label: string;
+    date: string;
+    critical: boolean;
+  }>;
+  notes: string;
+}
+
+export interface FlightTravel {
+  type: "FLIGHT_TRAVEL";
+  tripName: string;
+  segments: Array<{
+    type: "Flight" | "Hotel" | "Car" | "Other";
+    label: string;
+    date: string;
+    time: string;
+    confirmation: string;
+    notes: string;
+  }>;
+}
+
+export interface ReceiptExpense {
+  type: "RECEIPT_EXPENSE";
+  merchant: string;
+  amount: string;
+  date: string;
+  category: "Meals" | "Marketing" | "Office" | "Travel" | "Client Gift" | "Other";
+  notes: string;
+  taxDeductible: boolean;
+}
+
+export interface KidsSchedule {
+  type: "KIDS_SCHEDULE";
+  childName: string;
+  events: Array<{
+    title: string;
+    date: string;
+    time: string;
+    location: string;
+    notes: string;
+  }>;
+}
+
 export type AnalysisResult =
   | ClientConvoData
   | RestaurantData
   | MovieData
   | SocialContentData
   | MarketStatsData
-  | NoteData;
+  | NoteData
+  | PropertyListing
+  | NewLead
+  | ContractDeadline
+  | FlightTravel
+  | ReceiptExpense
+  | KidsSchedule;
 
 export interface SessionItem {
   id: string;
