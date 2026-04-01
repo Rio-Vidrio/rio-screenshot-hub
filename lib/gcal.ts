@@ -37,6 +37,12 @@ function appendAuthUser(url: string, _calendarEmail?: string): string {
   return `${url}&authuser=0`;
 }
 
+/** True when running on an Apple device (iPhone, iPad, or Mac). */
+export function isAppleDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return /iPhone|iPad|iPod|Macintosh|MacIntel/i.test(navigator.userAgent);
+}
+
 export function buildCalendarEventLink({
   title,
   date,
@@ -45,6 +51,7 @@ export function buildCalendarEventLink({
   details = "",
   location = "",
   calendarEmail,
+  reminderMinutes = 30,
 }: {
   title: string;
   date: string;
@@ -53,6 +60,7 @@ export function buildCalendarEventLink({
   details?: string;
   location?: string;
   calendarEmail?: string;
+  reminderMinutes?: number;
 }): string {
   const start = toGCalDate(date, startTime);
   const end = toGCalDate(date, endTime);
@@ -63,20 +71,23 @@ export function buildCalendarEventLink({
     details,
     location,
   });
-  return appendAuthUser(
+  const base = appendAuthUser(
     `https://calendar.google.com/calendar/render?${params.toString()}`,
     calendarEmail
   );
+  return `${base}&add=&reminder=${reminderMinutes}`;
 }
 
 export function buildReminderLink({
   title,
   details = "",
   calendarEmail,
+  reminderMinutes = 30,
 }: {
   title: string;
   details?: string;
   calendarEmail?: string;
+  reminderMinutes?: number;
 }): string {
   const now = new Date();
   const year = now.getFullYear();
@@ -90,10 +101,11 @@ export function buildReminderLink({
     dates: `${start}/${end}`,
     details,
   });
-  return appendAuthUser(
+  const base = appendAuthUser(
     `https://calendar.google.com/calendar/render?${params.toString()}`,
     calendarEmail
   );
+  return `${base}&add=&reminder=${reminderMinutes}`;
 }
 
 export function buildTaskLink({
@@ -182,6 +194,7 @@ export function buildReminderUrl(
   _calendarEmail: string,
   date: string, // YYYY-MM-DD
   time: string, // HH:MM
+  reminderMinutes = 30,
 ): string {
   const [yr, mo, dy] = date.split("-");
   const [hr, mn] = time.split(":");
@@ -197,7 +210,8 @@ export function buildReminderUrl(
     dates: `${startStr}/${endStr}`,
     details: description,
   });
-  return appendAuthUser(`https://calendar.google.com/calendar/render?${params.toString()}`);
+  const base = appendAuthUser(`https://calendar.google.com/calendar/render?${params.toString()}`);
+  return `${base}&add=&reminder=${reminderMinutes}`;
 }
 
 /** Trigger a .ics blob download — iOS Safari hands it off to Apple Calendar. */

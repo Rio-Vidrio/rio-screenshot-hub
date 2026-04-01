@@ -92,7 +92,7 @@ export interface NewLead {
   name: string;
   phone: string;
   email: string;
-  intent: "Buyer" | "Seller" | "Both" | "Unknown";
+  intent: "Buyer" | "Seller" | "Both" | "Unknown" | "";
   timeline: string;
   priceRange: string;
   notes: string;

@@ -105,11 +105,11 @@ NEW_LEAD:
   "name": "string",
   "phone": "string",
   "email": "string",
-  "intent": "Buyer | Seller | Both | Unknown",
-  "timeline": "string",
-  "priceRange": "string",
-  "notes": "string (context from the message)",
-  "followUpTemplate": "string (a ready-to-send follow up text message in Rio's voice, warm and professional)"
+  "intent": "Buyer | Seller | Both | (empty string if not explicitly stated)",
+  "timeline": "string (empty string if not mentioned)",
+  "priceRange": "string (empty string if not mentioned)",
+  "notes": "string (write what is visible in the message — their exact words, what they asked, any context about their situation)",
+  "followUpTemplate": "string (a ready-to-send follow up text in Rio's voice, warm and professional, based on what they actually said)"
 }
 
 CONTRACT_DEADLINE:
